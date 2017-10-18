@@ -1,0 +1,12 @@
+.box {
+	display: inline-block;
+}
+
+.border {
+	border: 1px solid #aaaaaa;
+}
+
+.contentsize {
+	width:200px;
+	height:200px;
+}
