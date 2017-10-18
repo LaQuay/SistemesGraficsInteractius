@@ -23,12 +23,11 @@
     void main(void) {
 	    vColor = vec4((aVertexPosition.x + 1.0)/2.0, aVertexPosition.y*0.0, aVertexPosition.z*0.0, 1.0);
 
-        gl_Position = vec4(aOffsetPosition, 1.0)*vec4(aVertexPosition, 1.0);
+        gl_Position = vec4(aOffsetPosition, 1.0)+vec4(aVertexPosition, 1.0); //Porque si sumo se hace más pequeño
     }
 </script>
 
 <script type="text/javascript">
-
     var lastMousePos;
     var lastMousePosWhenClick;
 	var aOffsetPosition;
@@ -42,8 +41,6 @@
 
         gl.clearColor(0.6, 0.6, 1.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
-
-		setOffsetValuesToPosition();
 		
         document.body.addEventListener('mousedown', function(evt) {
             var click = getMouseClick(evt);
@@ -61,7 +58,7 @@
         canvas.addEventListener('mousemove', function(evt) {
             lastMousePos = getMousePos(canvas, evt);
 
-            console.log('Mouse position: ' + lastMousePos.x + ',' + lastMousePos.y);
+            //console.log('Mouse position: ' + lastMousePos.x + ',' + lastMousePos.y);
         }, false);
 		
         drawScene();
@@ -209,7 +206,15 @@
     }
 	
 	function setOffsetValuesToPosition() {
-		gl.uniform3fv(shaderProgram.vectorOffsetUniform, [1, 0.2, 1]);
+		var lastPosX = lastMousePos.x;
+		var lastPosY = lastMousePos.y;
+		
+		var movementX = lastPosX / gl.viewportWidth;
+		console.log("LastPosx: "+ lastPosX);
+		console.log("ViewportWidth: " + gl.viewportWidth);
+		console.log("MovementX: " + movementX + ", " + (movementX)*2);
+		
+		gl.uniform3fv(shaderProgram.vectorOffsetUniform, [(movementX)*2, 0, 0]);
 	}
 </script>
 </head>
