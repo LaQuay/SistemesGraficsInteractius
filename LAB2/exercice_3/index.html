@@ -28,8 +28,7 @@
 </script>
 
 <script type="text/javascript">
-    var lastMousePos;
-    var lastMousePosWhenClick;
+    var isClicking;
 	var aOffsetPosition;
 	var aOffsetLocation;
 	
@@ -42,23 +41,29 @@
         gl.clearColor(0.6, 0.6, 1.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
 		
+		isClicking = false;
+		
         document.body.addEventListener('mousedown', function(evt) {
             var click = getMouseClick(evt);
 			
-            console.log('Mouse click: ' + click);
-            console.log(lastMousePos);
-
-            if (lastMousePos != lastMousePosWhenClick){
-				setOffsetValuesToPosition();
-                drawScene();
-                lastMousePos = lastMousePosWhenClick;
-            }
+            console.log('Mouse click: ' + click + ' down');
+			isClicking = true;
+        }, false);
+		
+		document.body.addEventListener('mouseup', function(evt) {
+            var click = getMouseClick(evt);
+			
+            console.log('Mouse click: ' + click + ' up');
+			isClicking = false;
         }, false);
 
         canvas.addEventListener('mousemove', function(evt) {
             lastMousePos = getMousePos(canvas, evt);
-
-            //console.log('Mouse position: ' + lastMousePos.x + ',' + lastMousePos.y);
+			
+			if(isClicking) {
+				setOffsetValuesToPosition();
+				drawScene();
+			}
         }, false);
 		
         drawScene();
@@ -209,12 +214,13 @@
 		var lastPosX = lastMousePos.x;
 		var lastPosY = lastMousePos.y;
 		
-		var movementX = lastPosX / gl.viewportWidth;
-		console.log("LastPosx: "+ lastPosX);
-		console.log("ViewportWidth: " + gl.viewportWidth);
-		console.log("MovementX: " + movementX + ", " + (movementX)*2);
+		var movementX = (lastPosX / gl.viewportWidth)*4-2;
+		console.log("MovementX: " + movementX);
 		
-		gl.uniform3fv(shaderProgram.vectorOffsetUniform, [(movementX)*2, 0, 0]);
+		var movementY = -((lastPosY / gl.viewportHeight)*4-2);
+		console.log("MovementY: " + movementY);
+		
+		gl.uniform3fv(shaderProgram.vectorOffsetUniform, [movementX, movementY, 0]);
 	}
 </script>
 </head>
