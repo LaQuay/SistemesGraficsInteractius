@@ -21,7 +21,7 @@
     uniform vec3 aOffsetPosition;
 	
     void main(void) {
-	    vColor = vec4((aVertexPosition.x + 1.0)/2.0, aVertexPosition.y*0.0, aVertexPosition.z*0.0, 1.0);
+	    vColor = vec4(0.0, (aOffsetPosition.y + aVertexPosition.y + 1.0)/2.0, (aOffsetPosition.x + aVertexPosition.x), 1.0);
 
         gl_Position = vec4(aOffsetPosition, 1.0)+vec4(aVertexPosition, 1.0); //Porque si sumo se hace más pequeño
     }
