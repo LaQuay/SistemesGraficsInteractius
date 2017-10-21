@@ -8,63 +8,26 @@
 
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
-	
+	varying vec4 vColor;
+
     void main(void) {
-		float colorR = 0.0;
-		float colorG = 0.0;
-		float colorB = 0.0;		
-	
-        if (mod(gl_FragCoord.x, 10.0) < 5.0) {
-            colorR = 1.0;
-			colorG = 0.0;
-			colorB = 0.0;
-			if (mod(gl_FragCoord.y, 10.0) < 5.0) {
-				colorR = 1.0;
-				colorG = 0.5;
-				colorB = 0.0;
-			} else if (mod(gl_FragCoord.y, 20.0) < 10.0) {
-				colorR = 0.0;
-				colorG = 0.0;
-				colorB = 0.0;
-			}
-        } else if (mod(gl_FragCoord.x, 20.0) < 10.0) {
-            colorR = 0.0;
-			colorG = 1.0;
-			colorB = 0.0;
-			if (mod(gl_FragCoord.y, 10.0) < 5.0) {
-				colorR = 1.0;
-				colorG = 1.0;
-				colorB = 1.0;
-			}
-        } else if (mod(gl_FragCoord.x, 30.0) < 20.0) {
-            colorR = 0.0;
-			colorG = 0.0;
-			colorB = 1.0;
-			if (mod(gl_FragCoord.y, 10.0) < 5.0) {
-				colorR = 0.2;
-				colorG = 1.0;
-				colorB = 1.0;
-			}
-        } else if (mod(gl_FragCoord.x, 30.0) < 30.0) {
-            colorR = 0.3;
-			colorG = 0.3;
-			colorB = 0.3;
-        }
-		
-		gl_FragColor = vec4(colorR, colorG, colorB, 1.0);
+		gl_FragColor = vColor;
     }
 </script>
 
 <script id="shader-vs" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
-
+	attribute vec4 aVertexColor;
+	
+	varying vec4 vColor;
+	
     void main(void) {
         gl_Position = vec4(aVertexPosition, 1.0);
+		vColor = aVertexColor;
     }
 </script>
 
-
-<script type="text/javascript">
+<script type="text/javascript">	
     function webGLStart() {
         var canvas = document.getElementById("lesson01-canvas");
         initGL(canvas);
@@ -73,7 +36,7 @@
 
         gl.clearColor(0.6, 0.6, 1.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
-
+		
         drawScene();
     }
 
@@ -125,9 +88,7 @@
         return shader;
     }
 
-
     var shaderProgram;
-
     function initShaders() {
         var fragmentShader = getShader(gl, "shader-fs");
         var vertexShader = getShader(gl, "shader-vs");
@@ -145,19 +106,19 @@
 
         shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
         gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-    }
+		
+		shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+        gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+	}
 
     var triangleVertexPositionBuffer;
+	var triangleVertexColorBuffer;
     var squareVertexPositionBuffer;
-
+    var squareVertexColorBuffer;
+	
     function initBuffers() {
         triangleVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        /*var vertices = [
-             -1.0,  1.0,  0.0,
-            -1.0, -1.0,  0.0,
-             0.0, -1.0,  0.0
-        ];*/
         var vertices = [
              -0.4,  0.2,  0.0,
               0.0,  0.8,  0.0,
@@ -166,16 +127,20 @@
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;
         triangleVertexPositionBuffer.numItems = 3;
-
+		
+		triangleVertexColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+        var colorVertices = [
+              1.0,  0.0,  0.0, 1.0,
+              0.0,  1.0,  0.0, 1.0,
+              0.0,  0.0,  1.0, 1.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorVertices), gl.STATIC_DRAW);
+        triangleVertexColorBuffer.itemSize = 4;
+        triangleVertexColorBuffer.numItems = 3;
+		
         squareVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        /*vertices = [
-             0.0,  1.0,  0.0,
-            0.0,  -1.0,  0.0,
-             1.0, 1.0,  0.0,
-            1.0, -1.0,  0.0
-        ];*/
-
         vertices = [
              0.2,  0.0,  0.0,
              0.2, -0.4,  0.0,
@@ -186,8 +151,20 @@
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         squareVertexPositionBuffer.itemSize = 3;
         squareVertexPositionBuffer.numItems = 4;
-    }
+		
+		squareVertexColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+        vertices = [
+             1.0,  0.0,  0.0, 1.0,
+             0.0,  1.0,  0.0, 1.0,
+             0.0,  1.0,  0.0, 1.0,
+			 0.0,  0.0,  1.0, 1.0
+        ];
 
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        squareVertexColorBuffer.itemSize = 4;
+        squareVertexColorBuffer.numItems = 4;
+    }
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -195,14 +172,21 @@
 
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, triangleVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		
         gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
-
+		
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+				
+		gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, squareVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
     }
 </script>
-
 </head>
 
 <body onload="webGLStart();">
