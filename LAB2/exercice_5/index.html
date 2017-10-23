@@ -176,7 +176,7 @@
     }
 	
 	function setOffsetValuesToPosition() {	
-		console.log("SliderColors - RGB " + aSliderColor.R + " " + aSliderColor.G+ " " + aSliderColor.B);
+		console.log("SliderColors - RGB " + aSliderColor.R + " " + aSliderColor.G + " " + aSliderColor.B);
 		gl.uniform3fv(shaderProgram.vectorOffsetUniform, [aSliderColor.R, aSliderColor.G, aSliderColor.B]);
 	}
 	
@@ -188,14 +188,52 @@
 		} else if (e.target.id == "slider3") {
 			aSliderColor.B = e.target.value;
 		}
+		
+		document.getElementById("slider0").value = rgb_To_Hex(parseInt(aSliderColor.R*255), parseInt(aSliderColor.G*255), parseInt(aSliderColor.B*255));		
+		
+		
 		setOffsetValuesToPosition();	
         drawScene();
+	}
+	
+	function onColorPickerChange(e) {
+		console.log("Picked color: " + e.target.value + ", " + hex_to_RGB(e.target.value));
+		aSliderColor = hex_to_RGB(e.target.value);
+		
+		document.getElementById("slider1").value = aSliderColor.R;
+		document.getElementById("slider2").value = aSliderColor.G;
+		document.getElementById("slider3").value = aSliderColor.B;
+		
+		setOffsetValuesToPosition();	
+        drawScene();
+	}
+	
+	function hex_to_RGB(hex) {
+		var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+		
+		return {
+			R: parseInt(m[1], 16) / 255,
+			G: parseInt(m[2], 16) / 255,
+			B: parseInt(m[3], 16) / 255
+		};
+	}
+	
+	function componentToHex(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;
+	}
+
+	function rgb_To_Hex(r, g, b) {
+		return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 	}
 </script>
 </head>
 
 <body onload="webGLStart();">
-    
+    <div>
+		Color picker: <input id="slider0" type="color" oninput="onColorPickerChange(event)";/>
+	</div>
+	
 	<div>
 		R: <input id="slider1" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" /> 
 	</div>
