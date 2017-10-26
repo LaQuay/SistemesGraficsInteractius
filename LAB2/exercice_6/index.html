@@ -22,22 +22,22 @@
 <script id="shader-vs" type="x-shader/x-vertex">
   attribute vec3 aVertexPosition;
   varying lowp vec4 vColor;
-  uniform vec3 aOffsetPosition;
 
   uniform mat4 uMVMatrix;
   uniform mat4 uPMatrix;
 
   void main(void) {
-    vColor = vec4(0.0, (aOffsetPosition.y + aVertexPosition.y + 1.0)/2.0, (aOffsetPosition.x + aVertexPosition.x + 1.0)/2.0, 1.0);
+    vColor = vec4((aVertexPosition.x + aVertexPosition.y)/2.0, (aVertexPosition.x + 1.0)/2.0, (aVertexPosition.y + 1.0)/2.0, 1.0);
 
-    gl_Position = uPMatrix * uMVMatrix * vec4(aOffsetPosition + aVertexPosition, 1.0);
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
   }
 </script>
 
 <script type="text/javascript">
   var isClicking;
   var aOffsetPosition;
-  var aOffsetLocation;
+
+  var offsetCamera;
 
   var rTri = 0;
   var rSquare = 0;
@@ -56,6 +56,28 @@
     gl.enable(gl.DEPTH_TEST);
 
     isClicking = false;
+    offsetCamera = {
+      x: 0,
+      y: 0,
+      z: 0
+    }
+
+    document.body.addEventListener('keydown', function(evt) {
+      var key = evt.key;
+      console.log('Key click: ' + key + ' up');
+      var lastZ = offsetCamera.z;
+
+      if (key == 'w') {
+        offsetCamera.z = offsetCamera.z - 1.0;
+      } else if (key == 's') {
+        offsetCamera.z = offsetCamera.z + 1.0;
+      }
+
+      if (lastZ != offsetCamera.z) {
+        drawScene();
+      }
+
+    }, false);
 
     document.body.addEventListener('mousedown', function(evt) {
       var click = getMouseClick(evt);
@@ -166,15 +188,12 @@
     shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
-    shaderProgram.vectorOffsetUniform = gl.getUniformLocation(shaderProgram, "aOffsetPosition");
-
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
   }
 
   var triangleVertexPositionBuffer;
   var squareVertexPositionBuffer;
-
   function initBuffers() {
     triangleVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
@@ -206,6 +225,9 @@
 
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.01, 100.0, pMatrix);
     mat4.identity(mvMatrix);
+
+    moveCamera(mvMatrix, offsetCamera.x*2.0, offsetCamera.y, offsetCamera.z);
+
     mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
 
     mvPushMatrix();
@@ -229,6 +251,10 @@
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
 
     mvPopMatrix();
+  }
+
+  function moveCamera(matrix, x, y, z) {
+    mat4.translate(mvMatrix, [x*2.0, y*2.0, z*2.0]); // Camera movement
   }
 
   function setMatrixUniforms() {
@@ -273,13 +299,28 @@
     var lastPosX = lastMousePos.x;
     var lastPosY = lastMousePos.y;
 
-    var movementX = (lastPosX / gl.viewportWidth)*2-1;
+    var movementX = viewportSizeToCanvasSize(lastPosX);
     console.log("MovementX: " + movementX);
 
-    var movementY = -((lastPosY / gl.viewportHeight)*2-1);
+    var movementY = -viewportSizeToCanvasSize(lastPosY);
     console.log("MovementY: " + movementY);
 
-    gl.uniform3fv(shaderProgram.vectorOffsetUniform, [movementX, movementY, 0]);
+    if (lastPosX < canvasSizeToViewportSize(offsetCamera.x)) {
+      offsetCamera.x = movementX;
+    } else {
+      offsetCamera.x = -movementX;
+    }
+    
+    //offsetCamera.x = movementX;
+    //offsetCamera.y = movementY;
+  }
+
+  function viewportSizeToCanvasSize(value) {
+    return (value / gl.viewportWidth)*2-1;
+  }
+
+  function canvasSizeToViewportSize(value) {
+    return (((value+1)/2) * gl.viewportWidth);
   }
 </script>
 </head>
