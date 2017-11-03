@@ -13,8 +13,17 @@ var objectTG = {
 	"scale": [0,0,0]	
 }
 
-function getBasePyramid() {
-	var pyramid = {
+function newObjectTG() {
+	return {
+		"rotateAng": 0,
+		"rotate": [0,0,0],
+		"translate": [0,0,0],
+		"scale": [0,0,0]	
+	}
+}
+
+function getBasePyramid() {	
+	return {
 		"vertices": DEFAULT_VERTICES_PYRAMID,
 		"verticesItemSize": DEFAULT_VERTICES_ITEM_SIZE,
 		"verticesNumItems": DEFAULT_VERTICES_NUM_ITEMS,
@@ -24,8 +33,6 @@ function getBasePyramid() {
 		"colorsNumItems": DEFAULT_COLOR_NUM_ITEMS,
 		"vertexColorBuffer": 0 
 	}
-	
-	return pyramid;
 }
 
 var DEFAULT_VERTICES_PYRAMID = [
