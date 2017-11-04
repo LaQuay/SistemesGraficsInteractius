@@ -1,8 +1,10 @@
 function getObjectTG() {
 	var pyramidsTG = [];
+	var spheresTG = [];
 
 	return {
-		pyramidsTG
+		"pyramidsTG": pyramidsTG,
+		"spheresTG": spheresTG
 	}
 }
 
@@ -83,7 +85,7 @@ var DEFAULT_COLOR_NUM_ITEMS_PYRAMID = 12;
 function getBaseSphere() {	
 	var latitudeBands = 50;
 	var longitudeBands = 50;
-	var radius = 3;
+	var radius = 1;
 	
 	var vertexPositionData = [];
 	var vertexColorData = [];
