@@ -9,6 +9,7 @@
 <script type="text/javascript" src="./libs/webgl-utils.js"></script>
 
 <script type="text/javascript" src="./models.js"></script>
+<script type="text/javascript" src="./listeners.js"></script>
 <script type="text/javascript" src="./auxiliar.js"></script>
 <script type="text/javascript" src="./matrix_auxiliar.js"></script>
 
@@ -48,6 +49,8 @@
 
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
+		
+		setKeyboardListener();
         
         tick();
     }
@@ -178,7 +181,11 @@
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
-				mat4.translate(mvMatrix, [i*3, 0.0, 0.0]);
+				if (modelObjects.pyramidsTG[i].selected) {
+					mat4.translate(mvMatrix, [i*3, 3.0, 0.0]);
+				} else {
+					mat4.translate(mvMatrix, [i*3, 0.0, 0.0]);				
+				}
 							
 				mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);	
 				
@@ -195,7 +202,11 @@
 		
 		for (i = 0; i < modelObjects.spheresTG.length; ++i){
 			mvPushMatrix();
-				mat4.translate(mvMatrix, [i*3, 2.0, 0.0]);
+				if (modelObjects.spheresTG[i].selected) {
+					mat4.translate(mvMatrix, [i*3, 3.0, 0.0]);
+				} else {
+					mat4.translate(mvMatrix, [i*3, 2.0, 0.0]);				
+				}
 				
 				mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [0, 1, 0]);
 										
@@ -211,6 +222,29 @@
 			mvPopMatrix();
 		}
     }
+	
+	function writeLateralElements() {
+		document.getElementById("listPyramids").innerHTML = "";
+		for (var i = 0; i < modelObjects.pyramidsTG.length; i++)
+		{
+		    nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + i + "</li>";
+			if (modelObjects.pyramidsTG[i].selected) {
+				nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + i + "</b></li>";
+			}
+		    document.getElementById("listPyramids").innerHTML += nameList;
+		}
+		
+		document.getElementById("listSphere").innerHTML = "";
+		for (var i = 0; i < modelObjects.spheresTG.length; i++)
+		{
+		    nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + i + "</li>";
+			if (modelObjects.spheresTG[i].selected) {
+				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + i + "</b></li>";
+				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + i + "</b></li>";
+			}
+		    document.getElementById("listSphere").innerHTML += nameList;
+		}		
+	}
 	
 	var lastTime = 0;
     function animate() {
@@ -234,24 +268,6 @@
         drawScene();
         animate();
     }
-	
-	function onButtonClick(ev) {
-		if (ev == "buttonAddPyramid") {
-			console.log("Adding Pyramid");
-			
-			var actualNumberOfPyramids = modelObjects.pyramidsTG.length;			
-			modelObjects.pyramidsTG[actualNumberOfPyramids] = newObjectTG();
-
-			drawScene();
-		} else if (ev == "buttonAddSphere") {
-			console.log("Adding Sphere");
-			
-			var actualNumberOfSpheres = modelObjects.spheresTG.length;			
-			modelObjects.spheresTG[actualNumberOfSpheres] = newObjectTG();
-
-			drawScene();
-		}
-	}
 </script>
 </head>
 
@@ -263,7 +279,17 @@
 	</div>	
 	
     <canvas id="practica1-canvas"></canvas>
-
+	
+	<div class="row">
+		<div class="col">
+			<p><b>List of Pyramids</b></p>
+			<p id="listPyramids" class="nodot"></p>
+		</div>	
+		<div class="col">
+			<p><b>List of Spheres</b></p>
+			<p id="listSphere" class="nodot"></p>
+		</div>	
+	</div>
 </body>
 
 </html>

@@ -5,6 +5,22 @@ body {
 
 canvas {
 	width: 99vw;
-	height: 90vh;
+	height: 80vh;
 	display: block;
+}
+
+.nodot {
+	list-style-type: none;
+}
+
+.row {
+	display: flex;
+}
+
+.col {
+	width: 120px;
+	padding-left: 1em;
+	margin-right: 10px; 
+	border: solid;
+	border-width: 1px;
 }

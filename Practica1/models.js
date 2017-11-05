@@ -8,15 +8,9 @@ function getObjectTG() {
 	}
 }
 
-var objectTG = {
-	"rotateAng": 0,
-	"rotate": [0,0,0],
-	"translate": [0,0,0],
-	"scale": [0,0,0]	
-}
-
-function newObjectTG() {
+function newObjectValues() {
 	return {
+		"selected": false,
 		"rotateAng": 0,
 		"rotate": [0,0,0],
 		"translate": [0,0,0],
