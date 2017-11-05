@@ -1,10 +1,12 @@
 function getObjectTG() {
 	var pyramidsTG = [];
 	var spheresTG = [];
+	var cubesTG = [];
 
 	return {
 		"pyramidsTG": pyramidsTG,
-		"spheresTG": spheresTG
+		"spheresTG": spheresTG,
+		"cubesTG": cubesTG,
 	}
 }
 
@@ -21,13 +23,13 @@ function newObjectValues() {
 /* PYRAMID FUNCTIONS */
 function getBasePyramid() {	
 	return {
-		"vertices": DEFAULT_VERTICES_PYRAMID,
-		"verticesItemSize": DEFAULT_VERTICES_ITEM_SIZE_PYRAMID,
-		"verticesNumItems": DEFAULT_VERTICES_NUM_ITEMS_PYRAMID,
+		"vertexPositionData": DEFAULT_VERTICES_PYRAMID,
+		"vertexPositionDataItemSize": DEFAULT_VERTICES_ITEM_SIZE_PYRAMID,
+		"vertexPositionDataNumItems": DEFAULT_VERTICES_NUM_ITEMS_PYRAMID,
 		"vertexPositionBuffer": 0,
-		"colors": DEFAULT_COLORS_PYRAMID,
-		"colorsItemSize": DEFAULT_COLORS_ITEM_SIZE_PYRAMID,
-		"colorsNumItems": DEFAULT_COLOR_NUM_ITEMS_PYRAMID,
+		"vertexColorData": DEFAULT_COLORS_PYRAMID,
+		"vertexColorDataItemSize": DEFAULT_COLORS_ITEM_SIZE_PYRAMID,
+		"vertexColorDataNumItems": DEFAULT_COLORS_NUM_ITEMS_PYRAMID,
 		"vertexColorBuffer": 0 
 	}
 }
@@ -73,7 +75,7 @@ var DEFAULT_COLORS_PYRAMID = [
 var DEFAULT_VERTICES_ITEM_SIZE_PYRAMID = 3;
 var DEFAULT_VERTICES_NUM_ITEMS_PYRAMID = 12;		
 var DEFAULT_COLORS_ITEM_SIZE_PYRAMID = 4;
-var DEFAULT_COLOR_NUM_ITEMS_PYRAMID = 12;
+var DEFAULT_COLORS_NUM_ITEMS_PYRAMID = 12;
 
 /* SPHERE FUNCTIONS */
 function getBaseSphere() {	
@@ -123,7 +125,7 @@ function getBaseSphere() {
 	}		
 	
 	var positionNumItems = vertexPositionData.length / DEFAULT_VERTICES_POSITION_SIZE_SPHERE;
-	var colorNumItems = vertexColorData.length / DEFAULT_VERTICES_COLOR_SIZE_SPHERE;
+	var colorNumItems = vertexColorData.length / DEFAULT_VERTICES_COLORS_SIZE_SPHERE;
 	var indexNumItems = vertexIndexData.length / DEFAULT_VERTICES_INDEX_SIZE_SPHERE;
 		
 	return {
@@ -132,7 +134,7 @@ function getBaseSphere() {
 		"vertexPositionDataNumItems": positionNumItems,
 		"vertexPositionBuffer": 0,
 		"vertexColorData": vertexColorData,
-		"vertexColorDataItemSize": DEFAULT_VERTICES_COLOR_SIZE_SPHERE,
+		"vertexColorDataItemSize": DEFAULT_VERTICES_COLORS_SIZE_SPHERE,
 		"vertexColorDataNumItems": colorNumItems,
 		"vertexColorBuffer": 0,
 		"vertexIndexData": vertexIndexData,
@@ -143,5 +145,105 @@ function getBaseSphere() {
 }
 
 var DEFAULT_VERTICES_POSITION_SIZE_SPHERE = 3;
-var DEFAULT_VERTICES_COLOR_SIZE_SPHERE = 3;
+var DEFAULT_VERTICES_COLORS_SIZE_SPHERE = 3;
 var DEFAULT_VERTICES_INDEX_SIZE_SPHERE = 1;
+
+/* CUBES FUNCTIONS */
+function getBaseCube() {	
+	return {
+		"vertexPositionData": DEFAULT_VERTICES_CUBE,
+		"vertexPositionDataItemSize": DEFAULT_VERTICES_ITEM_SIZE_CUBE,
+		"vertexPositionDataNumItems": DEFAULT_VERTICES_NUM_ITEMS_CUBE,
+		"vertexPositionBuffer": 0,
+		"vertexColorData": DEFAULT_COLORS_CUBE,
+		"vertexColorDataItemSize": DEFAULT_COLORS_ITEM_SIZE_CUBE,
+		"vertexColorDataNumItems": DEFAULT_COLORS_NUM_ITEMS_CUBE,
+		"vertexColorBuffer": 0,
+		"vertexIndexData": DEFAULT_INDEX_CUBE,
+		"vertexIndexDataItemSize": DEFAULT_INDEX_ITEM_SIZE_CUBE,
+		"vertexIndexDataNumItems": DEFAULT_INDEX_NUM_ITEMS_CUBE,
+		"vertexIndexBuffer": 0 
+	}
+}
+
+var DEFAULT_VERTICES_CUBE = [
+	// Front face
+	-1.0, -1.0,  1.0,
+	 1.0, -1.0,  1.0,
+	 1.0,  1.0,  1.0,
+	-1.0,  1.0,  1.0,
+	// Back face
+	-1.0, -1.0, -1.0,
+	-1.0,  1.0, -1.0,
+	 1.0,  1.0, -1.0,
+	 1.0, -1.0, -1.0,
+	// Top face
+	-1.0,  1.0, -1.0,
+	-1.0,  1.0,  1.0,
+	 1.0,  1.0,  1.0,
+	 1.0,  1.0, -1.0,
+	// Bottom face
+	-1.0, -1.0, -1.0,
+	 1.0, -1.0, -1.0,
+	 1.0, -1.0,  1.0,
+	-1.0, -1.0,  1.0,
+	// Right face
+	 1.0, -1.0, -1.0,
+	 1.0,  1.0, -1.0,
+	 1.0,  1.0,  1.0,
+	 1.0, -1.0,  1.0,
+	// Left face
+	-1.0, -1.0, -1.0,
+	-1.0, -1.0,  1.0,
+	-1.0,  1.0,  1.0,
+	-1.0,  1.0, -1.0
+];
+
+var DEFAULT_COLORS_CUBE = [
+	// Front face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 1.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	// Back face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 1.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	// Top face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 1.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,	
+	// Bottom face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 1.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	// Right face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	1.0, 1.0, 0.0, 1.0,
+	0.0, 1.0, 0.0, 1.0,
+	// Left face
+	1.0, 0.0, 0.0, 1.0,
+	0.0, 0.0, 1.0, 1.0,
+	0.0, 1.0, 1.0, 1.0,
+	0.0, 1.0, 0.0, 1.0
+];
+
+var DEFAULT_INDEX_CUBE = [
+	0, 1, 2,      0, 2, 3,    // Front face
+	4, 5, 6,      4, 6, 7,    // Back face
+	8, 9, 10,     8, 10, 11,  // Top face
+	12, 13, 14,   12, 14, 15, // Bottom face
+	16, 17, 18,   16, 18, 19, // Right face
+	20, 21, 22,   20, 22, 23  // Left face
+];
+	
+var DEFAULT_VERTICES_ITEM_SIZE_CUBE = 3;
+var DEFAULT_VERTICES_NUM_ITEMS_CUBE = 24;		
+var DEFAULT_COLORS_ITEM_SIZE_CUBE = 4;
+var DEFAULT_COLORS_NUM_ITEMS_CUBE = 24;	
+var DEFAULT_INDEX_ITEM_SIZE_CUBE = 1;
+var DEFAULT_INDEX_NUM_ITEMS_CUBE = 36;

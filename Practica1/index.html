@@ -139,16 +139,17 @@
 	
 	var pyramid;
 	var sphere;
+	var cube;
     function initBuffers() {
 		pyramid = getBasePyramid();		
 		
 		pyramid.vertexPositionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexPositionBuffer);	
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.vertices), gl.STATIC_DRAW);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.vertexPositionData), gl.STATIC_DRAW);
 	
 		pyramid.vertexColorBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexColorBuffer);	
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.colors), gl.STATIC_DRAW);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.vertexColorData), gl.STATIC_DRAW);
 			
 		sphere = getBaseSphere();
 	 
@@ -163,6 +164,20 @@
 		sphere.vertexColorBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexColorBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sphere.vertexColorData), gl.STATIC_DRAW);
+		
+		cube = getBaseCube();		
+		
+		cube.vertexPositionBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexPositionBuffer);	
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.vertexPositionData), gl.STATIC_DRAW);
+	
+		cube.vertexColorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexColorBuffer);	
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.vertexColorData), gl.STATIC_DRAW);
+		
+		cube.vertexIndexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.vertexIndexBuffer);	
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cube.vertexIndexData), gl.STATIC_DRAW);
     }
 
 	var modelObjects;
@@ -181,34 +196,29 @@
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
-				if (modelObjects.pyramidsTG[i].selected) {
-					mat4.translate(mvMatrix, [i*3, 3.0, 0.0]);
-				} else {
-					mat4.translate(mvMatrix, [i*3, 0.0, 0.0]);				
-				}
-							
-				mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);	
+				mat4.translate(mvMatrix, [i*3, -1.0, 0.0]);	
+				if (modelObjects.pyramidsTG[i].selected) {		
+					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);	
+				} 
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexPositionBuffer);
-				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, pyramid.verticesItemSize, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, pyramid.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexColorBuffer);
-				gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pyramid.colorsItemSize, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, pyramid.vertexColorDataItemSize, gl.FLOAT, false, 0, 0);
 								
 				setMatrixUniforms();
-				gl.drawArrays(gl.TRIANGLES, 0, pyramid.verticesNumItems);			
+				gl.drawArrays(gl.TRIANGLES, 0, pyramid.vertexPositionDataNumItems);			
 			mvPopMatrix();
 		}
 		
 		for (i = 0; i < modelObjects.spheresTG.length; ++i){
 			mvPushMatrix();
-				if (modelObjects.spheresTG[i].selected) {
-					mat4.translate(mvMatrix, [i*3, 3.0, 0.0]);
-				} else {
-					mat4.translate(mvMatrix, [i*3, 2.0, 0.0]);				
-				}
+				mat4.translate(mvMatrix, [i*3, 1.0, 0.0]);	
 				
-				mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [0, 1, 0]);
+				if (modelObjects.spheresTG[i].selected) {
+					mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [0, 1, 0]);
+				}				
 										
 				gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexPositionBuffer);
 				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, sphere.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);     
@@ -221,29 +231,59 @@
 				gl.drawElements(gl.TRIANGLES, sphere.vertexIndexDataNumItems, gl.UNSIGNED_SHORT, 0);
 			mvPopMatrix();
 		}
+		
+		for (i = 0; i < modelObjects.cubesTG.length; ++i){
+			mvPushMatrix();
+				mat4.translate(mvMatrix, [i*3, 3.0, 0.0]);
+				if (modelObjects.cubesTG[i].selected) {
+					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [0, 1, 0]);	
+				}
+				
+				gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexPositionBuffer);
+				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cube.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);
+				
+				gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexColorBuffer);
+				gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, cube.vertexColorDataItemSize, gl.FLOAT, false, 0, 0);
+								
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.vertexIndexBuffer);
+				setMatrixUniforms();
+				gl.drawElements(gl.TRIANGLES, cube.vertexIndexDataNumItems, gl.UNSIGNED_SHORT, 0);	
+			mvPopMatrix();
+		}
     }
 	
 	function writeLateralElements() {
-		document.getElementById("listPyramids").innerHTML = "";
-		for (var i = 0; i < modelObjects.pyramidsTG.length; i++)
+		document.getElementById("listCube").innerHTML = "";
+		for (var i = 0; i < modelObjects.cubesTG.length; i++)
 		{
-		    nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + i + "</li>";
-			if (modelObjects.pyramidsTG[i].selected) {
-				nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + i + "</b></li>";
+		    nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
+			if (modelObjects.cubesTG[i].selected) {
+				nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
+				nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
 			}
-		    document.getElementById("listPyramids").innerHTML += nameList;
+		    document.getElementById("listCube").innerHTML += nameList;
 		}
 		
 		document.getElementById("listSphere").innerHTML = "";
 		for (var i = 0; i < modelObjects.spheresTG.length; i++)
 		{
-		    nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + i + "</li>";
+		    nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
 			if (modelObjects.spheresTG[i].selected) {
-				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + i + "</b></li>";
-				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + i + "</b></li>";
+				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
+				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
 			}
 		    document.getElementById("listSphere").innerHTML += nameList;
-		}		
+		}
+		
+		document.getElementById("listPyramids").innerHTML = "";
+		for (var i = 0; i < modelObjects.pyramidsTG.length; i++)
+		{
+		    nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
+			if (modelObjects.pyramidsTG[i].selected) {
+				nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
+			}
+		    document.getElementById("listPyramids").innerHTML += nameList;
+		}	
 	}
 	
 	var lastTime = 0;
@@ -258,6 +298,10 @@
 			
 			for (i = 0; i < modelObjects.spheresTG.length; ++i){
 				modelObjects.spheresTG[i].rotateAng += (90 * elapsed) / 1000.0;
+			}
+			
+			for (i = 0; i < modelObjects.cubesTG.length; ++i){
+				modelObjects.cubesTG[i].rotateAng += (90 * elapsed) / 1000.0;
 			}
         }
         lastTime = timeNow;
@@ -274,20 +318,25 @@
 <body onload="webGLStart();">
     
 	<div>
-		<button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">Add pyramid</button>
+		<button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">Add cube</button>
 		<button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">Add sphere</button>
+		<button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">Add pyramid</button>
 	</div>	
 	
     <canvas id="practica1-canvas"></canvas>
 	
 	<div class="row">
 		<div class="col">
-			<p><b>List of Pyramids</b></p>
-			<p id="listPyramids" class="nodot"></p>
+			<p><b>List of Cubes</b></p>
+			<p id="listCube" class="nodot"></p>
 		</div>	
 		<div class="col">
 			<p><b>List of Spheres</b></p>
 			<p id="listSphere" class="nodot"></p>
+		</div>	
+		<div class="col">
+			<p><b>List of Pyramids</b></p>
+			<p id="listPyramids" class="nodot"></p>
 		</div>	
 	</div>
 </body>

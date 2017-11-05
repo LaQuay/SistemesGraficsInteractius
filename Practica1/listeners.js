@@ -8,18 +8,25 @@ function clickLateralElement(type, elem){
 	for (i = 0; i < modelObjects.spheresTG.length; ++i){
 		modelObjects.spheresTG[i].selected = (type == "S" && i == elem);
 	}
+	
+	for (i = 0; i < modelObjects.cubesTG.length; ++i){
+		modelObjects.cubesTG[i].selected = (type == "C" && i == elem);
+	}
 	writeLateralElements();
 }
 
 function onButtonClick(ev) {
 	if (ev == "buttonAddPyramid") {
 		console.log("Adding Pyramid");
+			
+		var actualNumberOfCubes = modelObjects.cubesTG.length;			
+		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
+		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;	
 		
-		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;			
 		modelObjects.pyramidsTG[actualNumberOfPyramids] = newObjectValues();
-		
+	
 		// Marcamos la primera piramide como seleccionada
-		if (actualNumberOfPyramids == 0) {
+		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
 			modelObjects.pyramidsTG[0].selected = true;
 		}
 
@@ -27,8 +34,29 @@ function onButtonClick(ev) {
 	} else if (ev == "buttonAddSphere") {
 		console.log("Adding Sphere");
 		
-		var actualNumberOfSpheres = modelObjects.spheresTG.length;			
+		var actualNumberOfCubes = modelObjects.cubesTG.length;			
+		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
+		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;
 		modelObjects.spheresTG[actualNumberOfSpheres] = newObjectValues();
+		
+		// Marcamos la primera sphere como seleccionada
+		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
+			modelObjects.spheresTG[0].selected = true;
+		}
+
+		drawScene();
+	} else if (ev == "buttonAddCube") {
+		console.log("Adding Cube");
+		
+		var actualNumberOfCubes = modelObjects.cubesTG.length;			
+		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
+		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;	
+		modelObjects.cubesTG[actualNumberOfCubes] = newObjectValues();
+		
+		// Marcamos la primera cube como seleccionada
+		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
+			modelObjects.cubesTG[0].selected = true;
+		}
 
 		drawScene();
 	}
@@ -42,30 +70,35 @@ function setKeyboardListener() {
 		console.log('Key click: ' + key);
 
 		// Se trata de hacer una dependencia circular, el objeto no es un array así que automaticamente
-		// no es capaz de hacerlo, cuando llegue al final de los pyramids pasará a los spheres
+		// no es capaz de hacerlo. Asi que itera por los cubos, cuando termina itera por spheres y
+		// cuando termina itera por piramides
 		if (key == 'ArrowRight') {
-		  var isPyramidSelected = false;
-		  for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
-			if (modelObjects.pyramidsTG[i].selected) {
-				isPyramidSelected = true;
-				modelObjects.pyramidsTG[i].selected = false;
+		  var isCubeSelected = false;
+		  for (i = 0; i < modelObjects.cubesTG.length; ++i){
+			if (modelObjects.cubesTG[i].selected) {
+				isCubeSelected = true;
+				modelObjects.cubesTG[i].selected = false;
 				
-				if (i < modelObjects.pyramidsTG.length - 1) {
-					modelObjects.pyramidsTG[i + 1].selected = true;					
+				if (i < modelObjects.cubesTG.length - 1) {
+					modelObjects.cubesTG[i + 1].selected = true;					
 				} else {
 					if (modelObjects.spheresTG.length != 0) {
 						modelObjects.spheresTG[0].selected = true;	
+					} else if (modelObjects.pyramidsTG.length != 0) {
+						modelObjects.pyramidsTG[0].selected = true;	
 					} else {
-						modelObjects.pyramidsTG[0].selected = true;							
+						modelObjects.cubesTG[0].selected = true;							
 					}
 				}
 				break;
 			}
 		  }
 		  
-		  if (!isPyramidSelected){
+		  var isSphereSelected = false;
+		  if (!isCubeSelected) {
 			  for (i = 0; i < modelObjects.spheresTG.length; ++i){
 				if (modelObjects.spheresTG[i].selected) {
+					isSphereSelected = true;
 					modelObjects.spheresTG[i].selected = false;
 					
 					if (i < modelObjects.spheresTG.length - 1) {
@@ -73,6 +106,8 @@ function setKeyboardListener() {
 					} else {
 						if (modelObjects.pyramidsTG.length != 0) {
 							modelObjects.pyramidsTG[0].selected = true;	
+						} else if (modelObjects.cubesTG.length != 0) {
+							modelObjects.cubesTG[0].selected = true;	
 						} else {
 							modelObjects.spheresTG[0].selected = true;							
 						}
@@ -81,44 +116,95 @@ function setKeyboardListener() {
 				}
 			  }
 		  }
+		  
+		  if (!isCubeSelected && !isSphereSelected){
+			  for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
+				if (modelObjects.pyramidsTG[i].selected) {
+					isSphereSelected = true;
+					modelObjects.pyramidsTG[i].selected = false;
+					
+					if (i < modelObjects.pyramidsTG.length - 1) {
+						modelObjects.pyramidsTG[i + 1].selected = true;					
+					} else {
+						if (modelObjects.cubesTG.length != 0) {
+							modelObjects.cubesTG[0].selected = true;	
+						} else if (modelObjects.spheresTG.length != 0) {
+							modelObjects.spheresTG[0].selected = true;	
+						} else {
+							modelObjects.pyramidsTG[0].selected = true;							
+						}
+					}
+					break;
+				}
+			  }
+			  
+		  }
 		  writeLateralElements();
 		} else if (key == 'ArrowLeft') {
-		  var isPyramidSelected = false;
-		  for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
-			if (modelObjects.pyramidsTG[i].selected) {
-				isPyramidSelected = true;
-				modelObjects.pyramidsTG[i].selected = false;
+		  var isCubeSelected = false;
+		  for (i = 0; i < modelObjects.cubesTG.length; ++i){
+			if (modelObjects.cubesTG[i].selected) {
+				isCubeSelected = true;
+				modelObjects.cubesTG[i].selected = false;
 				
 				if (i != 0) {
-					modelObjects.pyramidsTG[i - 1].selected = true;					
+					modelObjects.cubesTG[i - 1].selected = true;					
 				} else {
-					if (modelObjects.spheresTG.length != 0) {
+					if (modelObjects.pyramidsTG.length != 0) {
+						modelObjects.pyramidsTG[modelObjects.pyramidsTG.length - 1].selected = true;	
+					} else if (modelObjects.spheresTG.length != 0) {
 						modelObjects.spheresTG[modelObjects.spheresTG.length - 1].selected = true;	
 					} else {
-						modelObjects.pyramidsTG[modelObjects.pyramidsTG.length - 1].selected = true;							
+						modelObjects.cubesTG[modelObjects.cubesTG.length - 1].selected = true;							
 					}
 				}
 				break;
 			}
 		  }
 		  
-		  if (!isPyramidSelected){
+		  var isSphereSelected = false;
+		  if (!isCubeSelected) {
 			  for (i = 0; i < modelObjects.spheresTG.length; ++i){
 				if (modelObjects.spheresTG[i].selected) {
+					isSphereSelected = true;
 					modelObjects.spheresTG[i].selected = false;
 					
 					if (i != 0) {
 						modelObjects.spheresTG[i - 1].selected = true;					
 					} else {
-						if (modelObjects.pyramidsTG.length != 0) {
+						if (modelObjects.cubesTG.length != 0) {
+							modelObjects.cubesTG[modelObjects.cubesTG.length - 1].selected = true;
+						} else if (modelObjects.pyramidsTG.length != 0) {
 							modelObjects.pyramidsTG[modelObjects.pyramidsTG.length - 1].selected = true;	
 						} else {
-							modelObjects.spheresTG[0].selected = true;							
+							modelObjects.spheresTG[modelObjects.spheresTG.length - 1].selected = true;							
 						}
 					}
 					break;
 				}
 			  }
+		  }
+		  
+		  if (!isCubeSelected && !isSphereSelected){
+			  for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
+				if (modelObjects.pyramidsTG[i].selected) {
+					isSphereSelected = true;
+					modelObjects.pyramidsTG[i].selected = false;
+					
+					if (i != 0) {
+						modelObjects.pyramidsTG[i - 1].selected = true;					
+					} else {
+						if (modelObjects.spheresTG.length != 0) {
+							modelObjects.spheresTG[modelObjects.spheresTG.length - 1].selected = true;							
+						} else if (modelObjects.cubesTG.length != 0) {
+							modelObjects.cubesTG[modelObjects.cubesTG.length - 1].selected = true;	
+						} else {
+							modelObjects.pyramidsTG[modelObjects.pyramidsTG.length - 1].selected = true;							
+						}
+					}
+					break;
+				}
+			  }			  
 		  }
 		  writeLateralElements();
 		}
