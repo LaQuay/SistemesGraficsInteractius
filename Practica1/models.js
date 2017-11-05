@@ -50,7 +50,15 @@ var DEFAULT_VERTICES_PYRAMID = [
 	// Left face
 	 0.0,  1.0,  0.0,
 	-1.0, -1.0, -1.0,
-	-1.0, -1.0,  1.0
+	-1.0, -1.0,  1.0,
+	// Bottom face 1
+	 1.0, -1.0,  1.0,
+	-1.0, -1.0, -1.0,
+	-1.0, -1.0,  1.0,
+	// Bottom face 2
+	 1.0, -1.0,  1.0,
+	-1.0, -1.0, -1.0,
+	 1.0, -1.0, -1.0
 ];
 
 var DEFAULT_COLORS_PYRAMID = [
@@ -69,13 +77,21 @@ var DEFAULT_COLORS_PYRAMID = [
 	// Left face
 	1.0, 0.0, 0.0, 1.0,
 	0.0, 0.0, 1.0, 1.0,
-	0.0, 1.0, 0.0, 1.0
+	0.0, 1.0, 0.0, 1.0,
+	// Bottom face 1
+	1.0, 1.0, 0.0, 1.0,
+	0.0, 1.0, 1.0, 1.0,
+	1.0, 0.0, 1.0, 1.0,
+	// Bottom face 2
+	1.0, 1.0, 0.0, 1.0,
+	0.0, 1.0, 1.0, 1.0,
+	1.0, 0.0, 1.0, 1.0
 ];
 	
 var DEFAULT_VERTICES_ITEM_SIZE_PYRAMID = 3;
-var DEFAULT_VERTICES_NUM_ITEMS_PYRAMID = 12;		
+var DEFAULT_VERTICES_NUM_ITEMS_PYRAMID = 18;		
 var DEFAULT_COLORS_ITEM_SIZE_PYRAMID = 4;
-var DEFAULT_COLORS_NUM_ITEMS_PYRAMID = 12;
+var DEFAULT_COLORS_NUM_ITEMS_PYRAMID = 18;
 
 /* SPHERE FUNCTIONS */
 function getBaseSphere() {	
