@@ -15,6 +15,7 @@ function clickLateralElement(type, elem){
 	writeLateralElements();
 }
 
+// TODO Implementar posición por defecto
 function onButtonClick(ev) {
 	if (ev == "buttonAddPyramid") {
 		console.log("Adding Pyramid");

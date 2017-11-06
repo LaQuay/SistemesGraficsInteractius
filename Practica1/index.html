@@ -312,30 +312,60 @@
         drawScene();
         animate();
     }
+	
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+	
+	function drop(ev) {
+		console.log("Drop item: " + ev.screenX + ", " + ev.screenY);
+		
+		ev.preventDefault();
+		
+		if (draggedItem == "imgleft") {
+			onButtonClick("buttonAddCube");	
+		} else if (draggedItem == "imgcenter") {
+			onButtonClick("buttonAddSphere");	
+		} else if (draggedItem == "imgright") {
+			onButtonClick("buttonAddPyramid");	
+		}			
+	}
+	
+	var draggedItem;
+	function drag(img) {
+		console.log("Dragging item: " + img);
+		draggedItem = img;
+	}
 </script>
 </head>
 
 <body onload="webGLStart();">
     
 	<div>
-		<button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">Add cube</button>
-		<button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">Add sphere</button>
-		<button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">Add pyramid</button>
+		<div id="square_left" class="box contentsize">
+			<img id="imgleft" class="contentsize" src="img/cube.png" draggable="true" ondragstart="drag(this.id)">
+		</div>
+		<div id="square_center" class="box contentsize">
+			<img id="imgcenter" class="contentsize" src="img/sphere.png" draggable="true" ondragstart="drag(this.id)">
+		</div>
+		<div id="square_right" class="box contentsize">
+			<img id="imgright" class="contentsize" src="img/pyramid.png" draggable="true" ondragstart="drag(this.id)">
+		</div>		
 	</div>	
 	
-    <canvas id="practica1-canvas"></canvas>
+    <canvas id="practica1-canvas" ondrop="drop(event)" ondragover="allowDrop(event)"></canvas>
 	
 	<div class="row">
 		<div class="col">
-			<p><b>List of Cubes</b></p>
+			<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">+</button></p>
 			<p id="listCube" class="nodot"></p>
 		</div>	
 		<div class="col">
-			<p><b>List of Spheres</b></p>
+			<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">+</button></p>
 			<p id="listSphere" class="nodot"></p>
 		</div>	
 		<div class="col">
-			<p><b>List of Pyramids</b></p>
+			<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">+</button></p>
 			<p id="listPyramids" class="nodot"></p>
 		</div>	
 	</div>
