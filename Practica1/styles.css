@@ -13,6 +13,19 @@ canvas {
 	list-style-type: none;
 }
 
+.clickable-text {
+	cursor: pointer;
+}
+
+.divnext {
+	display: inline-block;
+}
+
+.inputTG {
+	width: 50px;
+	margin-left: 10px;
+}
+
 .row {
 	display: flex;
 }

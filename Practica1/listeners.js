@@ -69,6 +69,24 @@ function setKeyboardListener() {
 	document.body.addEventListener('keydown', function(evt) {
 		var key = evt.key;
 		console.log('Key click: ' + key);
+		
+		if (key == 'd') {
+			var object = getSelectedObject();
+			
+			object.translate[0] = object.translate[0] + 0.2;
+		} else if (key == 'a') {
+			var object = getSelectedObject();
+			
+			object.translate[0] = object.translate[0] - 0.2;
+		} else if (key == 'w') {
+			var object = getSelectedObject();
+			
+			object.translate[1] = object.translate[1] + 0.2;
+		} else if (key == 's') {
+			var object = getSelectedObject();
+			
+			object.translate[1] = object.translate[1] - 0.2;
+		}
 
 		// Se trata de hacer una dependencia circular, el objeto no es un array así que automaticamente
 		// no es capaz de hacerlo. Asi que itera por los cubos, cuando termina itera por spheres y
