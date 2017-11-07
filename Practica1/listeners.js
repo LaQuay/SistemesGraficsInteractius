@@ -15,53 +15,75 @@ function clickLateralElement(type, elem){
 	writeLateralElements();
 }
 
-// TODO Implementar posición por defecto
-function onButtonClick(ev) {
+// ev, id del boton
+// objectTG, transformaciones geometricas y tipo, por ejemplo 'pyramidsTG'
+function onButtonAddObjectClick(ev, objectTG) {
+	var objectAdded = null;
 	if (ev == "buttonAddPyramid") {
 		console.log("Adding Pyramid");
+		isObjectAdded = true;
 			
 		var actualNumberOfCubes = modelObjects.cubesTG.length;			
 		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
 		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;	
 		
 		modelObjects.pyramidsTG[actualNumberOfPyramids] = newObjectValues();
+		
+		objectAdded = modelObjects.pyramidsTG[actualNumberOfPyramids];
 	
 		// Marcamos la primera piramide como seleccionada
 		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
 			modelObjects.pyramidsTG[0].selected = true;
 		}
-
-		drawScene();
 	} else if (ev == "buttonAddSphere") {
 		console.log("Adding Sphere");
+		isObjectAdded = true;
 		
 		var actualNumberOfCubes = modelObjects.cubesTG.length;			
 		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
 		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;
+		
 		modelObjects.spheresTG[actualNumberOfSpheres] = newObjectValues();
+		
+		objectAdded = modelObjects.spheresTG[actualNumberOfSpheres];
 		
 		// Marcamos la primera sphere como seleccionada
 		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
 			modelObjects.spheresTG[0].selected = true;
 		}
-
-		drawScene();
 	} else if (ev == "buttonAddCube") {
 		console.log("Adding Cube");
+		isObjectAdded = true;
 		
 		var actualNumberOfCubes = modelObjects.cubesTG.length;			
 		var actualNumberOfSpheres = modelObjects.spheresTG.length;	
 		var actualNumberOfPyramids = modelObjects.pyramidsTG.length;	
+		
 		modelObjects.cubesTG[actualNumberOfCubes] = newObjectValues();
+		
+		objectAdded = modelObjects.cubesTG[actualNumberOfCubes];
 		
 		// Marcamos la primera cube como seleccionada
 		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
 			modelObjects.cubesTG[0].selected = true;
 		}
-
-		drawScene();
 	}
 	
+	// Rotate aun no funciona
+	if (objectAdded != null) {
+		var rotateAng = 0;
+		var rotate = [0, 0, 0];
+		var translate = [0, 0, 0];
+		var scale = [1.0, 1.0, 1.0];
+		
+		objectAdded.rotateAng = rotateAng;
+		objectAdded.rotate = rotate;
+		objectAdded.translate = translate;
+		objectAdded.scale = scale;
+		
+		//drawScene();
+	}
+		
 	writeLateralElements();
 }
 

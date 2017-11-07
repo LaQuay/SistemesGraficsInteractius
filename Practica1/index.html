@@ -17,7 +17,6 @@
 
 <!-- ADD
 	https://www.w3schools.com/howto/howto_js_snackbar.asp
-	
 -->
 
 <script id="shader-fs" type="x-shader/x-fragment">
@@ -201,6 +200,7 @@
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
+				mat4.scale(mvMatrix, [modelObjects.pyramidsTG[i].scale[0], modelObjects.pyramidsTG[i].scale[1], modelObjects.pyramidsTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [i*3 + modelObjects.pyramidsTG[i].translate[0], -1.0 + modelObjects.pyramidsTG[i].translate[1], 0.0 + modelObjects.pyramidsTG[i].translate[2]]);	
 				if (modelObjects.pyramidsTG[i].selected) {		
 					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);		
@@ -219,6 +219,7 @@
 		
 		for (i = 0; i < modelObjects.spheresTG.length; ++i){
 			mvPushMatrix();
+				mat4.scale(mvMatrix, [modelObjects.spheresTG[i].scale[0], modelObjects.spheresTG[i].scale[1], modelObjects.spheresTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [i*3 + modelObjects.spheresTG[i].translate[0], 1.0 + modelObjects.spheresTG[i].translate[1], 0.0 + modelObjects.spheresTG[i].translate[2]]);	
 				
 				if (modelObjects.spheresTG[i].selected) {
@@ -239,6 +240,7 @@
 		
 		for (i = 0; i < modelObjects.cubesTG.length; ++i){
 			mvPushMatrix();
+				mat4.scale(mvMatrix, [modelObjects.cubesTG[i].scale[0], modelObjects.cubesTG[i].scale[1], modelObjects.cubesTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [i*3 + modelObjects.cubesTG[i].translate[0], 3.0 + modelObjects.cubesTG[i].translate[1], 0.0 + modelObjects.cubesTG[i].translate[2]]);
 				if (modelObjects.cubesTG[i].selected) {
 					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [0, 1, 0]);	
@@ -328,11 +330,11 @@
 		ev.preventDefault();
 		
 		if (draggedItem == "imgleft") {
-			onButtonClick("buttonAddCube");	
+			onButtonAddObjectClick("buttonAddCube");	
 		} else if (draggedItem == "imgcenter") {
-			onButtonClick("buttonAddSphere");	
+			onButtonAddObjectClick("buttonAddSphere");	
 		} else if (draggedItem == "imgright") {
-			onButtonClick("buttonAddPyramid");	
+			onButtonAddObjectClick("buttonAddPyramid");	
 		}			
 	}
 	
@@ -439,7 +441,7 @@
 					</div>				
 				</div>
 				<div class="col col-1">
-					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
 					<p id="listCube" class="nodot"></p>
 				</div>
 			</div>		
@@ -453,7 +455,7 @@
 					</div>
 				</div>
 				<div class="col col-1">
-					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
 					<p id="listSphere" class="nodot"></p>
 				</div>
 			</div>	
@@ -467,7 +469,7 @@
 					</div>	
 				</div>
 				<div class="col col-1">
-					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
 					<p id="listPyramids" class="nodot"></p>
 				</div>
 			</div>

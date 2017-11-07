@@ -14,9 +14,9 @@ function newObjectValues() {
 	return {
 		"selected": false,
 		"rotateAng": 0,
-		"rotate": [0,0,0],
-		"translate": [0,0,0],
-		"scale": [0,0,0]	
+		"rotate": [0, 0, 0],
+		"translate": [0, 0, 0],
+		"scale": [1.0, 1.0, 1.0]	
 	}
 }
 
