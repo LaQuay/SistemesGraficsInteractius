@@ -76,6 +76,13 @@ function onButtonAddObjectClick(ev, objectTG) {
 		var translate = [0, 0, 0];
 		var scale = [1.0, 1.0, 1.0];
 		
+		if (objectTG != null) {
+			rotateAng = objectTG.rotateAng;
+			rotate = objectTG.rotate;
+			translate = objectTG.translate;
+			scale = objectTG.scale;
+		}
+		
 		objectAdded.rotateAng = rotateAng;
 		objectAdded.rotate = rotate;
 		objectAdded.translate = translate;

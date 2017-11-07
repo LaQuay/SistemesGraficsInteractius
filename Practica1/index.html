@@ -330,11 +330,22 @@
 		ev.preventDefault();
 		
 		if (draggedItem == "imgleft") {
-			onButtonAddObjectClick("buttonAddCube");	
+			var objectTG = newObjectValues();
+			
+			var translateX = ev.screenX/gl.viewportWidth;
+			var translateY = ev.screenY/gl.viewportHeight;
+			objectTG.translate = [translateX, 0, 0];			
+			console.log("Placed item: " + translateX + ", " + 0);
+			
+			onButtonAddObjectClick("buttonAddCube", objectTG);	
 		} else if (draggedItem == "imgcenter") {
-			onButtonAddObjectClick("buttonAddSphere");	
+			var objectTG = newObjectValues();
+			
+			onButtonAddObjectClick("buttonAddSphere", objectTG);	
 		} else if (draggedItem == "imgright") {
-			onButtonAddObjectClick("buttonAddPyramid");	
+			var objectTG = newObjectValues();
+			
+			onButtonAddObjectClick("buttonAddPyramid", objectTG);	
 		}			
 	}
 	
