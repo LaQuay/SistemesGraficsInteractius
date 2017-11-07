@@ -15,6 +15,11 @@
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 
+<!-- ADD
+	https://www.w3schools.com/howto/howto_js_snackbar.asp
+	
+-->
+
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
 	
@@ -339,36 +344,59 @@
 </script>
 </head>
 
-<body onload="webGLStart();">
-    
-	<div>
-		<div id="square_left" class="box contentsize">
-			<img id="imgleft" class="contentsize" src="img/cube.png" draggable="true" ondragstart="drag(this.id)">
-		</div>
-		<div id="square_center" class="box contentsize">
-			<img id="imgcenter" class="contentsize" src="img/sphere.png" draggable="true" ondragstart="drag(this.id)">
-		</div>
-		<div id="square_right" class="box contentsize">
-			<img id="imgright" class="contentsize" src="img/pyramid.png" draggable="true" ondragstart="drag(this.id)">
-		</div>		
-	</div>	
-	
-    <canvas id="practica1-canvas" ondrop="drop(event)" ondragover="allowDrop(event)"></canvas>
-	
+<body onload="webGLStart();">	
 	<div class="row">
-		<div class="col">
-			<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">+</button></p>
-			<p id="listCube" class="nodot"></p>
-		</div>	
-		<div class="col">
-			<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">+</button></p>
-			<p id="listSphere" class="nodot"></p>
-		</div>	
-		<div class="col">
-			<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">+</button></p>
-			<p id="listPyramids" class="nodot"></p>
-		</div>	
+		<div class="col col-1 col-border">
+			<canvas id="practica1-canvas" class="border" ondrop="drop(event)" ondragover="allowDrop(event)"></canvas>
+		</div>
 	</div>
+	<div class="row">
+		<div class="col col-4 col-left col-border">
+			<p><b>Menú</b></p>
+		</div>	
+		<div class="col col-3 col-center col-border">
+			<div class="row">
+				<div class="col col-1 col-centered">
+					<div id="square_left">
+						<img id="imgleft" class="border contentsize" src="img/cube.png" draggable="true" ondragstart="drag(this.id)">
+						<p>Draw to add a Cube</p>
+					</div>				
+				</div>
+				<div class="col col-1">
+					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p id="listCube" class="nodot"></p>
+				</div>
+			</div>		
+		</div>	
+		<div class="col col-3 col-center col-border">
+			<div class="row">
+				<div class="col col-1 col-centered">
+					<div id="square_center">
+						<img id="imgcenter" class="border contentsize" src="img/sphere.png" draggable="true" ondragstart="drag(this.id)">
+						<p>Draw to add a Sphere</p>
+					</div>
+				</div>
+				<div class="col col-1">
+					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p id="listSphere" class="nodot"></p>
+				</div>
+			</div>	
+		</div>	
+		<div class="col col-3 col-right col-border">
+			<div class="row">
+				<div class="col col-1 col-centered">
+					<div id="square_right">
+						<img id="imgright" class="border contentsize" src="img/pyramid.png" draggable="true" ondragstart="drag(this.id)">
+						<p>Draw to add a Pyramid</p>
+					</div>	
+				</div>
+				<div class="col col-1">
+					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonClick(this.id);">+</button></p>
+					<p id="listPyramids" class="nodot"></p>
+				</div>
+			</div>
+		</div>	
+	</div>	
 </body>
 
 </html>
