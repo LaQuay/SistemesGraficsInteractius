@@ -264,12 +264,15 @@
     }
 	
 	function writeListElements() {
+		var textObjectSelected = "None";
+		
 		document.getElementById("listCube").innerHTML = "";
 		for (var i = 0; i < modelObjects.cubesTG.length; i++)
 		{
 		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
 			if (modelObjects.cubesTG[i].selected) {
 				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
+				textObjectSelected = "Cube: " + (i + 1);
 			}
 		    document.getElementById("listCube").innerHTML += nameList;
 		}
@@ -280,6 +283,7 @@
 		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
 			if (modelObjects.spheresTG[i].selected) {
 				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
+				textObjectSelected = "Sphere: " + (i + 1);
 			}
 		    document.getElementById("listSphere").innerHTML += nameList;
 		}
@@ -290,9 +294,13 @@
 		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
 			if (modelObjects.pyramidsTG[i].selected) {
 				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
+				textObjectSelected = "Pyramid: " + (i + 1);
 			}
 		    document.getElementById("listPyramids").innerHTML += nameList;
 		}	
+		
+		document.getElementById("text-object-selected").innerHTML = textObjectSelected;
+		toggleHideShow("unselect-item", true, "inline-block");
 	}
 	
 	var lastTime = 0;
@@ -352,10 +360,10 @@
 		draggedItem = img;
 	}
 	
-	function toggleHideShow(element) {
+	function toggleHideShow(element, visible, inlineorinlineblock) {
 		var x = document.getElementById(element);
-		if (x.style.display === "none") {
-			x.style.display = "block";
+		if (visible || x.style.display === "none") {
+			x.style.display = inlineorinlineblock;
 		} else {
 			x.style.display = "none";
 		}
@@ -485,6 +493,16 @@
 		writeListElements();	
 		updateControlList();
 	}
+	
+	function unSelectObjectSelected() {
+		var selectedObject = getSelectedObject();
+		
+		if (selectedObject != null) {
+			selectedObject.selected = false;
+			updateVisualElements();
+			toggleHideShow("unselect-item", false);
+		}
+	}
 </script>
 </head>
 
@@ -497,8 +515,8 @@
 	<div class="row">
 		<div class="col col-4 col-left col-border">
 			<p><b>Menu</b></p>
-			<p>Selected: None [<i class="clickable-text">Unselect</i>]</p>
-			<p id="control-tg" class="clickable-text" onclick="toggleHideShow('div-control')"><b>Controls</b></p>
+			<p>Selected: <b id="text-object-selected">None</b> [<i id="unselect-item" class="clickable-text" onclick="unSelectObjectSelected();">Unselect</i>]</p>
+			<p id="control-tg" class="clickable-text" onclick="toggleHideShow('div-control', null, 'block')"><b>Controls</b></p>
 			<div id="div-control">
 				<p>Position [x, y, z]</p>	
 				<div class="divnext">
