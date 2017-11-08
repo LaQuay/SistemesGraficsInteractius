@@ -12,7 +12,7 @@ function clickLateralElement(type, elem){
 	for (i = 0; i < modelObjects.cubesTG.length; ++i){
 		modelObjects.cubesTG[i].selected = (type == "C" && i == elem);
 	}
-	writeLateralElements();
+	updateVisualElements();
 }
 
 // ev, id del boton
@@ -88,10 +88,10 @@ function onButtonAddObjectClick(ev, objectTG) {
 		objectAdded.translate = translate;
 		objectAdded.scale = scale;
 		
-		//drawScene();
+		drawScene();
 	}
-		
-	writeLateralElements();
+	
+	updateVisualElements();
 }
 
 function setKeyboardListener() {
@@ -102,19 +102,19 @@ function setKeyboardListener() {
 		if (key == 'd') {
 			var object = getSelectedObject();
 			
-			object.translate[0] = object.translate[0] + 0.2;
+			modifyObjectTG(object, "position-x", object.translate[0] + 0.2, true);
 		} else if (key == 'a') {
 			var object = getSelectedObject();
 			
-			object.translate[0] = object.translate[0] - 0.2;
+			modifyObjectTG(object, "position-x", object.translate[0] - 0.2, true);
 		} else if (key == 'w') {
 			var object = getSelectedObject();
 			
-			object.translate[1] = object.translate[1] + 0.2;
+			modifyObjectTG(object, "position-y", object.translate[1] + 0.2, true);
 		} else if (key == 's') {
 			var object = getSelectedObject();
 			
-			object.translate[1] = object.translate[1] - 0.2;
+			modifyObjectTG(object, "position-y", object.translate[1] - 0.2, true);
 		}
 
 		// Se trata de hacer una dependencia circular, el objeto no es un array así que automaticamente
@@ -187,7 +187,7 @@ function setKeyboardListener() {
 			  }
 			  
 		  }
-		  writeLateralElements();
+		  updateVisualElements();
 		} else if (key == 'ArrowLeft') {
 		  var isCubeSelected = false;
 		  for (i = 0; i < modelObjects.cubesTG.length; ++i){
@@ -254,7 +254,7 @@ function setKeyboardListener() {
 				}
 			  }			  
 		  }
-		  writeLateralElements();
+		  updateVisualElements();
 		}
 	}, false);
 }

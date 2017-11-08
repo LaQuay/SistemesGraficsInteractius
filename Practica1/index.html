@@ -55,8 +55,12 @@
         gl.enable(gl.DEPTH_TEST);
 		
 		setKeyboardListener();
+		
+		initializeControls();
         
-        tick();
+        //tick();
+		
+		drawScene();
     }
 
     var gl;
@@ -201,7 +205,7 @@
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.pyramidsTG[i].scale[0], modelObjects.pyramidsTG[i].scale[1], modelObjects.pyramidsTG[i].scale[2]]);
-				mat4.translate(mvMatrix, [i*3 + modelObjects.pyramidsTG[i].translate[0], -1.0 + modelObjects.pyramidsTG[i].translate[1], 0.0 + modelObjects.pyramidsTG[i].translate[2]]);	
+				mat4.translate(mvMatrix, [modelObjects.pyramidsTG[i].translate[0], modelObjects.pyramidsTG[i].translate[1], modelObjects.pyramidsTG[i].translate[2]]);	
 				if (modelObjects.pyramidsTG[i].selected) {		
 					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);		
 				} 
@@ -220,7 +224,7 @@
 		for (i = 0; i < modelObjects.spheresTG.length; ++i){
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.spheresTG[i].scale[0], modelObjects.spheresTG[i].scale[1], modelObjects.spheresTG[i].scale[2]]);
-				mat4.translate(mvMatrix, [i*3 + modelObjects.spheresTG[i].translate[0], 1.0 + modelObjects.spheresTG[i].translate[1], 0.0 + modelObjects.spheresTG[i].translate[2]]);	
+				mat4.translate(mvMatrix, [modelObjects.spheresTG[i].translate[0], modelObjects.spheresTG[i].translate[1], modelObjects.spheresTG[i].translate[2]]);	
 				
 				if (modelObjects.spheresTG[i].selected) {
 					mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [0, 1, 0]);
@@ -241,7 +245,7 @@
 		for (i = 0; i < modelObjects.cubesTG.length; ++i){
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.cubesTG[i].scale[0], modelObjects.cubesTG[i].scale[1], modelObjects.cubesTG[i].scale[2]]);
-				mat4.translate(mvMatrix, [i*3 + modelObjects.cubesTG[i].translate[0], 3.0 + modelObjects.cubesTG[i].translate[1], 0.0 + modelObjects.cubesTG[i].translate[2]]);
+				mat4.translate(mvMatrix, [modelObjects.cubesTG[i].translate[0], modelObjects.cubesTG[i].translate[1], modelObjects.cubesTG[i].translate[2]]);
 				if (modelObjects.cubesTG[i].selected) {
 					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [0, 1, 0]);	
 				}
@@ -259,14 +263,13 @@
 		}
     }
 	
-	function writeLateralElements() {
+	function writeListElements() {
 		document.getElementById("listCube").innerHTML = "";
 		for (var i = 0; i < modelObjects.cubesTG.length; i++)
 		{
-		    nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
 			if (modelObjects.cubesTG[i].selected) {
-				nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
-				nameList = "<li " + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
 			}
 		    document.getElementById("listCube").innerHTML += nameList;
 		}
@@ -274,10 +277,9 @@
 		document.getElementById("listSphere").innerHTML = "";
 		for (var i = 0; i < modelObjects.spheresTG.length; i++)
 		{
-		    nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
 			if (modelObjects.spheresTG[i].selected) {
-				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
-				nameList = "<li " + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
 			}
 		    document.getElementById("listSphere").innerHTML += nameList;
 		}
@@ -285,9 +287,9 @@
 		document.getElementById("listPyramids").innerHTML = "";
 		for (var i = 0; i < modelObjects.pyramidsTG.length; i++)
 		{
-		    nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
 			if (modelObjects.pyramidsTG[i].selected) {
-				nameList = "<li " + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
 			}
 		    document.getElementById("listPyramids").innerHTML += nameList;
 		}	
@@ -331,11 +333,6 @@
 		
 		if (draggedItem == "imgleft") {
 			var objectTG = newObjectValues();
-			
-			var translateX = ev.screenX/gl.viewportWidth;
-			var translateY = ev.screenY/gl.viewportHeight;
-			objectTG.translate = [translateX, 0, 0];			
-			console.log("Placed item: " + translateX + ", " + 0);
 			
 			onButtonAddObjectClick("buttonAddCube", objectTG);	
 		} else if (draggedItem == "imgcenter") {
@@ -381,6 +378,113 @@
 			}
 		}
 	}
+	
+	function initializeControls() {
+		setInputValue("position-x-input", "0.0");
+		setInputValue("position-y-input", "0.0");
+		setInputValue("position-z-input", "0.0");
+		setInputValue("rotation-a-input", "0");
+		setInputValue("rotation-x-input", "0");
+		setInputValue("rotation-y-input", "0");
+		setInputValue("rotation-z-input", "0");
+		setInputValue("scale-x-input", "1.0");
+		setInputValue("scale-y-input", "1.0");
+		setInputValue("scale-z-input", "1.0");
+	}
+	
+	function setInputValue(inputId, newValue) {
+		var input = document.getElementById(inputId);
+		input.value = newValue;
+	}
+	
+	function modifyObjectTGFromInput(inputId, inputValue) {
+		var object = getSelectedObject();
+		
+		if (object != null) {
+			modifyObjectTG(object, inputId.split("-input")[0], inputValue, true);
+		}
+	}
+	
+	function modifyObjectTG(object, inputVariable, inputValue, shouldUpdate) {
+		switch (inputVariable) {
+			case "position-x":
+				object.translate[0] = inputValue;
+				setInputValue("position-x-input", inputValue);
+				break;
+			
+			case "position-y":
+				object.translate[1] = inputValue;
+				setInputValue("position-y-input", inputValue);
+				break;
+			
+			case "position-z":
+				object.translate[2] = inputValue;
+				setInputValue("position-z-input", inputValue);
+				break;
+			
+			case "rotation-a":
+				object.rotateAng = inputValue;
+				setInputValue("rotation-a-input", inputValue);
+				break;
+			
+			case "rotation-x":
+				object.rotate[0] = inputValue;
+				setInputValue("rotation-x-input", inputValue);
+				break;
+			
+			case "rotation-y":
+				object.rotate[1] = inputValue;
+				setInputValue("rotation-y-input", inputValue);
+				break;
+			
+			case "rotation-z":
+				object.rotate[2] = inputValue;
+				setInputValue("rotation-z-input", inputValue);
+				break;
+			
+			case "scale-x":
+				object.scale[0] = inputValue;
+				setInputValue("scale-x-input", inputValue);
+				break;
+			
+			case "scale-y":
+				object.scale[1] = inputValue;
+				setInputValue("scale-y-input", inputValue);
+				break;
+			
+			case "scale-z":
+				object.scale[2] = inputValue;
+				setInputValue("scale-z-input", inputValue);
+				break;
+		}
+		
+		if (shouldUpdate) {
+			updateVisualElements();
+		}		
+	}
+	
+	function updateControlList() {
+		var selectedObject = getSelectedObject(); 
+		
+		if (selectedObject != null) {
+			setInputValue("position-x-input", selectedObject.translate[0]);
+			setInputValue("position-y-input", selectedObject.translate[1]);
+			setInputValue("position-z-input", selectedObject.translate[2]);
+			setInputValue("rotation-a-input", selectedObject.rotateAng);
+			setInputValue("rotation-x-input", selectedObject.rotate[0]);
+			setInputValue("rotation-y-input", selectedObject.rotate[1]);
+			setInputValue("rotation-z-input", selectedObject.rotate[2]);
+			setInputValue("scale-x-input", selectedObject.scale[0]);
+			setInputValue("scale-y-input", selectedObject.scale[1]);
+			setInputValue("scale-z-input", selectedObject.scale[2]);
+		}	
+	}
+	
+	function updateVisualElements() {
+		drawScene();	
+		writeListElements();	
+		updateControlList();
+	}
 </script>
 </head>
 
@@ -393,50 +497,47 @@
 	<div class="row">
 		<div class="col col-4 col-left col-border">
 			<p><b>Menu</b></p>
+			<p>Selected: None [<i class="clickable-text">Unselect</i>]</p>
 			<p id="control-tg" class="clickable-text" onclick="toggleHideShow('div-control')"><b>Controls</b></p>
-			<div id="div-control" style="display: block;">
+			<div id="div-control">
 				<p>Position [x, y, z]</p>	
 				<div class="divnext">
-					<input type="number" class="inputTG">
+					<input id="position-x-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
 				<div class="divnext">				
-					<input type="number" class="inputTG">
+					<input id="position-y-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
 				<div class="divnext">
-					<input type="number" class="inputTG">				
+					<input id="position-z-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">				
 				</div>
-			</div>
-			
-			<div id="div-control" style="display: block;">
+				
 				<div class="divnext">
 					<p>Rotation [a, x, y, z]</p>	
 				</div>
 				<div class="divnext">
-					<input type="number" class="inputTG">
+					<input id="rotation-a-input" type="number" class="inputTG" step="1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
 				<div>
 					<div class="divnext">
-						<input type="number" class="inputTG">
+						<input id="rotation-x-input" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 					</div>
 					<div class="divnext">
-						<input type="number" class="inputTG">
+						<input id="rotation-y-input" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 					</div>
 					<div class="divnext">				
-						<input type="number" class="inputTG">
+						<input id="rotation-z-input" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 					</div>
 				</div>
-			</div>
-			
-			<div id="div-control" style="display: block;">
+				
 				<p>Scale [x, y, z]</p>	
 				<div class="divnext">
-					<input type="number" class="inputTG">
+					<input id="scale-x-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
 				<div class="divnext">				
-					<input type="number" class="inputTG">
+					<input id="scale-y-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
 				<div class="divnext">
-					<input type="number" class="inputTG">				
+					<input id="scale-z-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">				
 				</div>
 			</div>
 			
