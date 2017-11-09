@@ -57,8 +57,10 @@
 		setKeyboardListener();
 		
 		initializeControls();
+		
+		toggleHideShow("unselect-item", false);
         
-        //tick();
+        //tick();		
 		
 		drawScene();
     }
@@ -207,7 +209,7 @@
 				mat4.scale(mvMatrix, [modelObjects.pyramidsTG[i].scale[0], modelObjects.pyramidsTG[i].scale[1], modelObjects.pyramidsTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.pyramidsTG[i].translate[0], modelObjects.pyramidsTG[i].translate[1], modelObjects.pyramidsTG[i].translate[2]]);	
 				if (modelObjects.pyramidsTG[i].selected) {		
-					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [0, 1, 0]);		
+					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [modelObjects.pyramidsTG[i].rotate[0], modelObjects.pyramidsTG[i].rotate[1], modelObjects.pyramidsTG[i].rotate[2]]);		
 				} 
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexPositionBuffer);
@@ -227,7 +229,7 @@
 				mat4.translate(mvMatrix, [modelObjects.spheresTG[i].translate[0], modelObjects.spheresTG[i].translate[1], modelObjects.spheresTG[i].translate[2]]);	
 				
 				if (modelObjects.spheresTG[i].selected) {
-					mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [0, 1, 0]);
+					mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [modelObjects.spheresTG[i].rotate[0], modelObjects.spheresTG[i].rotate[1], modelObjects.spheresTG[i].rotate[2]]);
 				}				
 										
 				gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexPositionBuffer);
@@ -247,7 +249,7 @@
 				mat4.scale(mvMatrix, [modelObjects.cubesTG[i].scale[0], modelObjects.cubesTG[i].scale[1], modelObjects.cubesTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.cubesTG[i].translate[0], modelObjects.cubesTG[i].translate[1], modelObjects.cubesTG[i].translate[2]]);
 				if (modelObjects.cubesTG[i].selected) {
-					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [0, 1, 0]);	
+					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [modelObjects.cubesTG[i].rotate[0], modelObjects.cubesTG[i].rotate[1], modelObjects.cubesTG[i].rotate[2]]);	
 				}
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexPositionBuffer);
@@ -269,9 +271,9 @@
 		document.getElementById("listCube").innerHTML = "";
 		for (var i = 0; i < modelObjects.cubesTG.length; i++)
 		{
-		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('C'," + i + ")" + "> Cube: " + (i + 1) + "</li>";
 			if (modelObjects.cubesTG[i].selected) {
-				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('C'," + i + ")" + "> <b> Cube: " + (i + 1) + "</b></li>";
 				textObjectSelected = "Cube: " + (i + 1);
 			}
 		    document.getElementById("listCube").innerHTML += nameList;
@@ -280,9 +282,9 @@
 		document.getElementById("listSphere").innerHTML = "";
 		for (var i = 0; i < modelObjects.spheresTG.length; i++)
 		{
-		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('S'," + i + ")" + "> Sphere: " + (i + 1) + "</li>";
 			if (modelObjects.spheresTG[i].selected) {
-				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('S'," + i + ")" + "> <b> Sphere: " + (i + 1) + "</b></li>";
 				textObjectSelected = "Sphere: " + (i + 1);
 			}
 		    document.getElementById("listSphere").innerHTML += nameList;
@@ -291,9 +293,9 @@
 		document.getElementById("listPyramids").innerHTML = "";
 		for (var i = 0; i < modelObjects.pyramidsTG.length; i++)
 		{
-		    nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
+		    nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('P'," + i + ")" + "> Pyramid: " + (i + 1) + "</li>";
 			if (modelObjects.pyramidsTG[i].selected) {
-				nameList = "<li class='clickable-text'" + "onclick=clickLateralElement('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
+				nameList = "<li class='clickable-text'" + "onclick=updateElementClicked('P'," + i + ")" + "> <b> Pyramid: " + (i + 1) + "</b></li>";
 				textObjectSelected = "Pyramid: " + (i + 1);
 			}
 		    document.getElementById("listPyramids").innerHTML += nameList;
@@ -339,18 +341,12 @@
 		
 		ev.preventDefault();
 		
-		if (draggedItem == "imgleft") {
-			var objectTG = newObjectValues();
-			
-			onButtonAddObjectClick("buttonAddCube", objectTG);	
-		} else if (draggedItem == "imgcenter") {
-			var objectTG = newObjectValues();
-			
-			onButtonAddObjectClick("buttonAddSphere", objectTG);	
+		if (draggedItem == "imgleft") {			
+			onButtonAddObjectClick("buttonAddCube");	
+		} else if (draggedItem == "imgcenter") {			
+			onButtonAddObjectClick("buttonAddSphere");	
 		} else if (draggedItem == "imgright") {
-			var objectTG = newObjectValues();
-			
-			onButtonAddObjectClick("buttonAddPyramid", objectTG);	
+			onButtonAddObjectClick("buttonAddPyramid");	
 		}			
 	}
 	
@@ -402,7 +398,22 @@
 	
 	function setInputValue(inputId, newValue) {
 		var input = document.getElementById(inputId);
-		input.value = newValue;
+		input.value = parseFloat(newValue);
+	}
+	
+	function modifyObjectTGFromControls(object) {		
+		if (object != null) {		
+			object.translate[0] = document.getElementById("position-x-input").value;
+			object.translate[1] = document.getElementById("position-y-input").value;
+			object.translate[2] = document.getElementById("position-z-input").value;
+			object.rotateAng = document.getElementById("rotation-a-input").value;
+			object.rotate[0] = document.getElementById("rotation-x-input").value;
+			object.rotate[1] = document.getElementById("rotation-y-input").value;
+			object.rotate[2] = document.getElementById("rotation-z-input").value;
+			object.rotate[0] = document.getElementById("scale-x-input").value;
+			object.rotate[1] = document.getElementById("scale-y-input").value;
+			object.rotate[2] = document.getElementById("scale-z-input").value;
+		}
 	}
 	
 	function modifyObjectTGFromInput(inputId, inputValue) {
@@ -489,9 +500,9 @@
 	}
 	
 	function updateVisualElements() {
-		drawScene();	
 		writeListElements();	
 		updateControlList();
+		drawScene();	
 	}
 	
 	function unSelectObjectSelected() {
@@ -500,6 +511,7 @@
 		if (selectedObject != null) {
 			selectedObject.selected = false;
 			updateVisualElements();
+			initializeControls();
 			toggleHideShow("unselect-item", false);
 		}
 	}
@@ -560,7 +572,10 @@
 			</div>
 			
 			<p><b>Help</b></p>
+			<i>How can I change the selected object?</i>
 			<p>Press keyboardArrows to change the selected object.</p>
+			<i>How can I add an object with custom values?</i>
+			<p>Unselect current object, change TG values and draw-and-drop object, or click add button.</p>
 		</div>	
 		<div class="col col-3 col-center col-border">
 			<div class="row">
@@ -571,7 +586,7 @@
 					</div>				
 				</div>
 				<div class="col col-1">
-					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
+					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
 					<p id="listCube" class="nodot"></p>
 				</div>
 			</div>		
@@ -585,7 +600,7 @@
 					</div>
 				</div>
 				<div class="col col-1">
-					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
+					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
 					<p id="listSphere" class="nodot"></p>
 				</div>
 			</div>	
@@ -599,7 +614,7 @@
 					</div>	
 				</div>
 				<div class="col col-1">
-					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonAddObjectClick(this.id, null);">+</button></p>
+					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
 					<p id="listPyramids" class="nodot"></p>
 				</div>
 			</div>

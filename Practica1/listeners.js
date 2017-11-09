@@ -1,4 +1,4 @@
-function clickLateralElement(type, elem){
+function updateElementClicked(type, elem){
 	console.log("Element clicked: " + type + ", " + elem);
 	
 	for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
@@ -17,7 +17,7 @@ function clickLateralElement(type, elem){
 
 // ev, id del boton
 // objectTG, transformaciones geometricas y tipo, por ejemplo 'pyramidsTG'
-function onButtonAddObjectClick(ev, objectTG) {
+function onButtonAddObjectClick(ev) {
 	var objectAdded = null;
 	if (ev == "buttonAddPyramid") {
 		console.log("Adding Pyramid");
@@ -30,11 +30,11 @@ function onButtonAddObjectClick(ev, objectTG) {
 		modelObjects.pyramidsTG[actualNumberOfPyramids] = newObjectValues();
 		
 		objectAdded = modelObjects.pyramidsTG[actualNumberOfPyramids];
+		
+		modifyObjectTGFromControls(objectAdded);
 	
-		// Marcamos la primera piramide como seleccionada
-		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
-			modelObjects.pyramidsTG[0].selected = true;
-		}
+		// Marcamos la actual piramide como seleccionada
+		updateElementClicked("P", actualNumberOfPyramids);
 	} else if (ev == "buttonAddSphere") {
 		console.log("Adding Sphere");
 		isObjectAdded = true;
@@ -47,10 +47,10 @@ function onButtonAddObjectClick(ev, objectTG) {
 		
 		objectAdded = modelObjects.spheresTG[actualNumberOfSpheres];
 		
-		// Marcamos la primera sphere como seleccionada
-		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
-			modelObjects.spheresTG[0].selected = true;
-		}
+		modifyObjectTGFromControls(objectAdded);
+		
+		// Marcamos la actual sphere como seleccionada		
+		updateElementClicked("S", actualNumberOfSpheres);
 	} else if (ev == "buttonAddCube") {
 		console.log("Adding Cube");
 		isObjectAdded = true;
@@ -63,31 +63,13 @@ function onButtonAddObjectClick(ev, objectTG) {
 		
 		objectAdded = modelObjects.cubesTG[actualNumberOfCubes];
 		
-		// Marcamos la primera cube como seleccionada
-		if ((actualNumberOfCubes + actualNumberOfSpheres + actualNumberOfPyramids) == 0) {
-			modelObjects.cubesTG[0].selected = true;
-		}
+		modifyObjectTGFromControls(objectAdded);
+		
+		// Marcamos la actual cube como seleccionada		
+		updateElementClicked("C", actualNumberOfCubes);
 	}
 	
-	// Rotate aun no funciona
-	if (objectAdded != null) {
-		var rotateAng = 0;
-		var rotate = [0, 0, 0];
-		var translate = [0, 0, 0];
-		var scale = [1.0, 1.0, 1.0];
-		
-		if (objectTG != null) {
-			rotateAng = objectTG.rotateAng;
-			rotate = objectTG.rotate;
-			translate = objectTG.translate;
-			scale = objectTG.scale;
-		}
-		
-		objectAdded.rotateAng = rotateAng;
-		objectAdded.rotate = rotate;
-		objectAdded.translate = translate;
-		objectAdded.scale = scale;
-		
+	if (objectAdded != null) {		
 		drawScene();
 	}
 	
@@ -102,19 +84,27 @@ function setKeyboardListener() {
 		if (key == 'd') {
 			var object = getSelectedObject();
 			
-			modifyObjectTG(object, "position-x", object.translate[0] + 0.2, true);
+			if (object != null) {
+				modifyObjectTG(object, "position-x", object.translate[0] + 0.2, true);
+			}
 		} else if (key == 'a') {
 			var object = getSelectedObject();
 			
-			modifyObjectTG(object, "position-x", object.translate[0] - 0.2, true);
+			if (object != null) {
+				modifyObjectTG(object, "position-x", object.translate[0] - 0.2, true);
+			}
 		} else if (key == 'w') {
 			var object = getSelectedObject();
 			
-			modifyObjectTG(object, "position-y", object.translate[1] + 0.2, true);
+			if (object != null) {
+				modifyObjectTG(object, "position-y", object.translate[1] + 0.2, true);
+			}
 		} else if (key == 's') {
 			var object = getSelectedObject();
 			
-			modifyObjectTG(object, "position-y", object.translate[1] - 0.2, true);
+			if (object != null) {
+				modifyObjectTG(object, "position-y", object.translate[1] - 0.2, true);
+			}
 		}
 
 		// Se trata de hacer una dependencia circular, el objeto no es un array así que automaticamente
