@@ -85,25 +85,25 @@ function setKeyboardListener() {
 			var object = getSelectedObject();
 			
 			if (object != null) {
-				modifyObjectTG(object, "position-x", object.translate[0] + 0.2, true);
+				modifyObjectTG(object, "position-x", parseFloat(object.translate[0]) + 0.2, true);
 			}
 		} else if (key == 'a') {
 			var object = getSelectedObject();
 			
 			if (object != null) {
-				modifyObjectTG(object, "position-x", object.translate[0] - 0.2, true);
+				modifyObjectTG(object, "position-x", parseFloat(object.translate[0]) - 0.2, true);
 			}
 		} else if (key == 'w') {
 			var object = getSelectedObject();
 			
 			if (object != null) {
-				modifyObjectTG(object, "position-y", object.translate[1] + 0.2, true);
+				modifyObjectTG(object, "position-y", parseFloat(object.translate[1]) + 0.2, true);
 			}
 		} else if (key == 's') {
 			var object = getSelectedObject();
 			
 			if (object != null) {
-				modifyObjectTG(object, "position-y", object.translate[1] - 0.2, true);
+				modifyObjectTG(object, "position-y", parseFloat(object.translate[1]) - 0.2, true);
 			}
 		}
 
