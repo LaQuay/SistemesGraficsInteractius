@@ -248,3 +248,7 @@ function setKeyboardListener() {
 		}
 	}, false);
 }
+
+function onSwitchChangedPosition() {
+	drawScene();
+}

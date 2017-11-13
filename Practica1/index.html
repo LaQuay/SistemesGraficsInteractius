@@ -59,6 +59,7 @@
 		initializeControls();
 		
 		toggleHideShow("unselect-item", false);
+		toggleHideShow("div-help", false);
         
         //tick();		
 		
@@ -200,9 +201,15 @@
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 100.0, pMatrix);
+		// If checked, camara es axonometrica, si no, ortogonal
+		if (document.getElementById("switch-camera").checked) {
+			var ra = gl.canvas.width / gl.canvas.height;
+			mat4.ortho(-10*ra, 10*ra, -10, 10, 0.1, 100, pMatrix);
+		} else {
+			mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 100.0, pMatrix);
+		}
         mat4.identity(mvMatrix);
-        mat4.translate(mvMatrix, [-11, -1.0, -10.0]);
+        mat4.translate(mvMatrix, [-11.0, -1.0, -10.0]);
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
@@ -401,18 +408,23 @@
 		input.value = parseFloat(newValue);
 	}
 	
+	function getInputValue(inputId) {
+		return document.getElementById(inputId).value;	
+	}
+	
+	
 	function modifyObjectTGFromControls(object) {		
 		if (object != null) {		
-			object.translate[0] = document.getElementById("position-x-input").value;
-			object.translate[1] = document.getElementById("position-y-input").value;
-			object.translate[2] = document.getElementById("position-z-input").value;
-			object.rotateAng = document.getElementById("rotation-a-input").value;
-			object.rotate[0] = document.getElementById("rotation-x-input").value;
-			object.rotate[1] = document.getElementById("rotation-y-input").value;
-			object.rotate[2] = document.getElementById("rotation-z-input").value;
-			object.rotate[0] = document.getElementById("scale-x-input").value;
-			object.rotate[1] = document.getElementById("scale-y-input").value;
-			object.rotate[2] = document.getElementById("scale-z-input").value;
+			object.translate[0] = getInputValue("position-x-input");
+			object.translate[1] = getInputValue("position-y-input");
+			object.translate[2] = getInputValue("position-z-input");
+			object.rotateAng = getInputValue("rotation-a-input");
+			object.rotate[0] = getInputValue("rotation-x-input");
+			object.rotate[1] = getInputValue("rotation-y-input");
+			object.rotate[2] = getInputValue("rotation-z-input");
+			object.rotate[0] = getInputValue("scale-x-input");
+			object.rotate[1] = getInputValue("scale-y-input");
+			object.rotate[2] = getInputValue("scale-z-input");
 		}
 	}
 	
@@ -520,14 +532,18 @@
 
 <body onload="webGLStart();">	
 	<div class="row">
-		<div class="col col-1 col-border">
-			<canvas id="practica1-canvas" class="border" ondrop="drop(event)" ondragover="allowDrop(event)"></canvas>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col col-4 col-left col-border">
+		<div class="col col-4 col-border">
 			<p><b>Menu</b></p>
 			<p>Selected: <b id="text-object-selected">None</b> [<i id="unselect-item" class="clickable-text" onclick="unSelectObjectSelected();">Unselect</i>]</p>
+			<p id="camera-tg" class="clickable-text" onclick="toggleHideShow('div-camera', null, 'block')"><b>Camera</b></p>
+			<div id="div-camera" class="container-center-vertical">
+				<i style="margin-right: 5px;">Ortho</i>
+					<label class="switch" onchange="onSwitchChangedPosition()">
+					  <input id="switch-camera" type="checkbox">
+					  <span class="slider round"></span>
+					</label>
+				<i style="margin-left: 5px;">Axo</i>
+			</div>
 			<p id="control-tg" class="clickable-text" onclick="toggleHideShow('div-control', null, 'block')"><b>Controls</b></p>
 			<div id="div-control">
 				<p>Position [x, y, z]</p>	
@@ -541,9 +557,8 @@
 					<input id="position-z-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">				
 				</div>
 				
-				<div class="divnext">
-					<p>Rotation [a, x, y, z]</p>	
-				</div>
+				<p>Rotation [a, x, y, z]</p>	
+				
 				<div class="divnext">
 					<input id="rotation-a-input" type="number" class="inputTG" step="1" onchange="modifyObjectTGFromInput(this.id, this.value)">
 				</div>
@@ -571,54 +586,60 @@
 				</div>
 			</div>
 			
-			<p><b>Help</b></p>
-			<i>How can I change the selected object?</i>
-			<p>Press keyboardArrows to change the selected object.</p>
-			<i>How can I add an object with custom values?</i>
-			<p>Unselect current object, change TG values and draw-and-drop object, or click add button.</p>
-		</div>	
-		<div class="col col-3 col-center col-border">
-			<div class="row">
-				<div class="col col-1 col-centered">
-					<div id="square_left">
-						<img id="imgleft" class="border contentsize" src="img/cube.png" draggable="true" ondragstart="drag(this.id)">
-						<p>Draw to add a Cube</p>
-					</div>				
-				</div>
-				<div class="col col-1">
-					<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
-					<p id="listCube" class="nodot"></p>
-				</div>
-			</div>		
-		</div>	
-		<div class="col col-3 col-center col-border">
-			<div class="row">
-				<div class="col col-1 col-centered">
-					<div id="square_center">
-						<img id="imgcenter" class="border contentsize" src="img/sphere.png" draggable="true" ondragstart="drag(this.id)">
-						<p>Draw to add a Sphere</p>
-					</div>
-				</div>
-				<div class="col col-1">
-					<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
-					<p id="listSphere" class="nodot"></p>
-				</div>
-			</div>	
-		</div>	
-		<div class="col col-3 col-right col-border">
-			<div class="row">
-				<div class="col col-1 col-centered">
-					<div id="square_right">
-						<img id="imgright" class="border contentsize" src="img/pyramid.png" draggable="true" ondragstart="drag(this.id)">
-						<p>Draw to add a Pyramid</p>
-					</div>	
-				</div>
-				<div class="col col-1">
-					<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
-					<p id="listPyramids" class="nodot"></p>
-				</div>
+			<p id="help-text" class="clickable-text" onclick="toggleHideShow('div-help', null, 'block')"><b>Help</b></p>
+			<div id="div-help">
+				<i>How can I change the selected object?</i>
+				<p>Press keyboardArrows to change the selected object.</p>
+				<i>How can I add an object with custom values?</i>
+				<p>Unselect current object, change TG values and draw-and-drop object, or click add button.</p>
 			</div>
 		</div>	
+		
+		<div class="col col-1 col-border">
+			<div class="row">
+				<div class="col col-1">
+					<canvas id="practica1-canvas" class="border" ondrop="drop(event)" ondragover="allowDrop(event)"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col col-1 col-border">
+					<div class="col col-3 col-centered">
+						<div id="square_left">
+							<img id="imgleft" class="border contentsize" src="img/cube.png" draggable="true" ondragstart="drag(this.id)">
+							<p>Draw to add a Cube</p>
+						</div>				
+					</div>
+					<div class="col col-3">
+						<p><b>List of Cubes </b><button id="buttonAddCube" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
+						<p id="listCube" class="nodot"></p>
+					</div>
+				</div>
+				<div class="col col-1 col-border">
+					<div class="col col-3 col-centered">
+						<div id="square_center">
+							<img id="imgcenter" class="border contentsize" src="img/sphere.png" draggable="true" ondragstart="drag(this.id)">
+							<p>Draw to add a Sphere</p>
+						</div>
+					</div>
+					<div class="col col-3">
+						<p><b>List of Spheres </b><button id="buttonAddSphere" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
+						<p id="listSphere" class="nodot"></p>
+					</div>
+				</div>
+				<div class="col col-1 col-border">
+					<div class="col col-3 col-centered">
+						<div id="square_right">
+							<img id="imgright" class="border contentsize" src="img/pyramid.png" draggable="true" ondragstart="drag(this.id)">
+							<p>Draw to add a Pyramid</p>
+						</div>	
+					</div>
+					<div class="col col-3">
+						<p><b>List of Pyramids </b><button id="buttonAddPyramid" type="button" onclick="onButtonAddObjectClick(this.id);">+</button></p>
+						<p id="listPyramids" class="nodot"></p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>	
 </body>
 
