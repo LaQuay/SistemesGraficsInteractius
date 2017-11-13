@@ -20,3 +20,44 @@ function resize(canvas) {
 	canvas.height = displayHeight;
   }
 }
+
+function hex_to_RGB(hex) {
+	var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+	
+	return {
+		R: parseInt(m[1], 16) / 255,
+		G: parseInt(m[2], 16) / 255,
+		B: parseInt(m[3], 16) / 255
+	};
+}
+
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgb_To_Hex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function getRandomRGBColors() {
+	var r = randomRGB();
+	var g = randomRGB();
+	var b = randomRGB();
+	
+	while ((r+g+b) < 1.0 || (r+g+b) > 2.0) {
+		r = randomRGB(); 
+		g = randomRGB(); 
+		b = randomRGB();
+	}	
+	
+	return {
+		R: r,
+		G: g,
+		B: b
+	}
+}
+
+function randomRGB() {
+	return parseFloat((Math.random() * (1.00 - 0.00) + 0.00).toFixed(2));
+}

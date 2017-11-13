@@ -252,3 +252,39 @@ function setKeyboardListener() {
 function onSwitchChangedPosition() {
 	drawScene();
 }
+
+function updateSliderAndColorPicker() {
+	document.getElementById("slider0").value = rgb_To_Hex(parseInt(aSliderColor.R*255), parseInt(aSliderColor.G*255), parseInt(aSliderColor.B*255));	
+	document.getElementById("slider1").value = aSliderColor.R;
+	document.getElementById("slider2").value = aSliderColor.G;
+	document.getElementById("slider3").value = aSliderColor.B;
+}
+
+function onSliderChange(e) {			
+	if (e.target.id == "slider1") {
+		aSliderColor.R = e.target.value;
+	} else if (e.target.id == "slider2") {
+		aSliderColor.G = e.target.value;
+	} else if (e.target.id == "slider3") {
+		aSliderColor.B = e.target.value;
+	}
+	
+	document.getElementById("slider0").value = rgb_To_Hex(parseInt(aSliderColor.R*255), parseInt(aSliderColor.G*255), parseInt(aSliderColor.B*255));		
+	
+	setOffsetValuesToPosition();	
+	
+	drawScene();
+}
+
+function onColorPickerChange(e) {
+	console.log("Picked color: " + e.target.value + ", " + hex_to_RGB(e.target.value));
+	aSliderColor = hex_to_RGB(e.target.value);
+	
+	document.getElementById("slider1").value = aSliderColor.R;
+	document.getElementById("slider2").value = aSliderColor.G;
+	document.getElementById("slider3").value = aSliderColor.B;
+	
+	setOffsetValuesToPosition();	
+	
+	drawScene();
+}
