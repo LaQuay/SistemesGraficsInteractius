@@ -295,6 +295,34 @@ function onSwitchChangedPosition() {
 	drawScene();
 }
 
+function onCheckboxSliderChangedPosition(value) {
+	if (document.getElementById("checkbox-fragment").checked) {
+		gl.uniform1f(shaderProgram.isFragmentShaderColorActivatedUniform, value);			
+	}
+	drawScene();	
+}
+
+function onCheckboxChangedPosition(type) {
+	if (type == "fragment") {
+		if (document.getElementById("checkbox-fragment").checked) {
+			gl.uniform1f(shaderProgram.isFragmentShaderColorActivatedUniform, document.getElementById("slider-fragment-shader").value);	
+			document.getElementById("checkbox-vertex").checked = false;		
+			gl.uniform1f(shaderProgram.isVertexShaderColorActivatedUniform, 0.0);	
+		} else {
+			gl.uniform1f(shaderProgram.isFragmentShaderColorActivatedUniform, 0.0);					
+		}
+	} else if (type == "vertex") {
+		if (document.getElementById("checkbox-vertex").checked) {
+			gl.uniform1f(shaderProgram.isVertexShaderColorActivatedUniform, 0.8);	
+			document.getElementById("checkbox-fragment").checked = false;			
+			gl.uniform1f(shaderProgram.isFragmentShaderColorActivatedUniform, 0.0);	
+		} else {
+			gl.uniform1f(shaderProgram.isVertexShaderColorActivatedUniform, 0.0);					
+		}		
+	}
+	drawScene();		
+}
+
 function updateSliderAndColorPicker() {
 	document.getElementById("slider0").value = rgb_To_Hex(parseInt(aSliderColor.R*255), parseInt(aSliderColor.G*255), parseInt(aSliderColor.B*255));	
 	document.getElementById("slider1").value = aSliderColor.R;

@@ -18,10 +18,51 @@
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
 	
-    varying vec4 vColor;
+    varying vec4 vColor;	
+	varying float vIsFragmentShaderColorActivated;
 	
-    void main(void) {		
-		gl_FragColor = vColor;
+    void main(void) {
+		//No existen booleanos en varying asi que si es entre 0.0 y 0.1 es true, si no, falso
+		//Y se aprovecha ese rango entre 0.1 y 1.0 como multiplicador de tamaño de lineas
+		if (vIsFragmentShaderColorActivated > 0.1) {
+			float colorR = 0.0;
+			float colorG = 0.0;
+			float colorB = 0.0;	
+			
+			float offset = vIsFragmentShaderColorActivated*2.0;
+			if (gl_FragCoord.y < (150.0 * offset)) { //lila
+				colorR = 0.47;
+				colorG = 0.16;
+				colorB = 0.55;
+			} else if (gl_FragCoord.y < (300.0 * offset)) {//azul
+				colorR = 0.0;
+				colorG = 0.44;
+				colorB = 0.72;
+			} else if (gl_FragCoord.y < (450.0 * offset)) {//cyan
+				colorR = 0.0;
+				colorG = 0.69;
+				colorB = 0.96;
+			} else if (gl_FragCoord.y < (600.0 * offset)) {//verde
+				colorR = 0.0;
+				colorG = 0.59;
+				colorB = 0.27;
+			} else if (gl_FragCoord.y < (750.0 * offset)) {//amarillo
+				colorR = 1.0;
+				colorG = 0.91;
+				colorB = 0.0;
+			} else if (gl_FragCoord.y < (900.0 * offset)) {//naranja
+				colorR = 0.94;
+				colorG = 0.5;
+				colorB = 0.1;
+			} else if (gl_FragCoord.y < (1050.0 * offset)) {//rojo
+				colorR = 0.9;
+				colorG = 0.0;
+				colorB = 0.15;
+			}
+			gl_FragColor = vec4(colorR, colorG, colorB, 1.0);	
+		} else {
+			gl_FragColor = vColor;		
+		}
     }
 </script>
 
@@ -30,14 +71,22 @@
     attribute vec4 aVertexColor;
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
+	uniform float uIsFragmentShaderColorActivated;
+	uniform float uIsVertexShaderColorActivated;
     varying vec4 vColor;
+	varying float vIsFragmentShaderColorActivated;
 	
     void main(void) {
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+				
+		vIsFragmentShaderColorActivated = uIsFragmentShaderColorActivated;		
 		
-		//vColor = aVertexColor;
-		
-		vColor = vec4(aVertexColor.x, aVertexColor.y, aVertexColor.z, 1.0);
+		//No existen booleanos en varying asi que si es entre 1 y 0.1 es true, si no, falso
+		if (uIsVertexShaderColorActivated > 0.1) {
+			vColor = vec4(aVertexColor.x, aVertexColor.y*gl_Position[1], aVertexColor.z, 1.0);
+		} else {
+			vColor = vec4(aVertexColor.x, aVertexColor.y, aVertexColor.z, 1.0);
+		}
     }
 </script>
 
@@ -147,6 +196,12 @@
 		
         shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.isFragmentShaderColorActivatedUniform = gl.getUniformLocation(shaderProgram, "uIsFragmentShaderColorActivated");
+        shaderProgram.isVertexShaderColorActivatedUniform = gl.getUniformLocation(shaderProgram, "uIsVertexShaderColorActivated");
+		
+        gl.uniform1f(shaderProgram.isFragmentShaderColorActivatedUniform, 0.0);
+        gl.uniform1f(shaderProgram.isVertexShaderColorActivatedUniform, 0.0);
     }
 	
 	var mvMatrix = mat4.create();
@@ -600,10 +655,10 @@
 			<div id="div-camera">
 				<div class="container-center-vertical">
 					<i style="margin-right: 5px;">Ortho</i>
-						<label class="switch" onchange="onSwitchChangedPosition()">
-						  <input id="switch-camera" type="checkbox">
-						  <span class="slider round"></span>
-						</label>
+					<label class="switch" onchange="onSwitchChangedPosition()">
+					  <input id="switch-camera" type="checkbox">
+					  <span class="slider round"></span>
+					</label>
 					<i style="margin-left: 5px;">Axo</i>
 				</div>
 				
@@ -712,6 +767,22 @@
 					<div class="col col-1">
 						<input id="slider0" type="color" class="inputcolor" oninput="onColorPickerChange(event)";/>
 					</div>
+				</div>
+				
+				<div class="container-center-vertical" style="margin-top: 15px;">
+					<label id="fragment" class="checkbox" onchange="onCheckboxChangedPosition(this.id)">
+					  <input id="checkbox-fragment" type="checkbox">
+					  <span class="checkmark"></span>
+					</label>		
+					<i style="margin-left: 10px;"> Pintat per FragmentShader</i>
+					<input id="slider-fragment-shader" type="range" min="0.2" max="0.8" step="0.01" value="0.3" oninput="onCheckboxSliderChangedPosition(this.value);" />
+				</div>
+				<div class="container-center-vertical" style="margin-top: 15px;">
+					<label id="vertex" class="checkbox" onchange="onCheckboxChangedPosition(this.id)">
+					  <input id="checkbox-vertex" type="checkbox">
+					  <span class="checkmark"></span>
+					</label>		
+					<i style="margin-left: 10px;"> Pintat per VertexShader</i>
 				</div>
 			</div>
 			
