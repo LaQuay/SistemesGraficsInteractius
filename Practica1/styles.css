@@ -5,7 +5,7 @@ body {
 
 canvas {
 	width: 100%;
-	height: 60vh;
+	height: 75vh;
 	display: block;
 }
 
@@ -51,7 +51,7 @@ canvas {
 .col-4 {
 	width: 20%;
 	padding-left: 1em;
-	padding-top: 5px;
+	padding-bottom: 1em;
 }
 
 .col-left {

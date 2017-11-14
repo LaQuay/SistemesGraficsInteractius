@@ -43,8 +43,15 @@
 
 <script type="text/javascript">
 	var aSliderColor;
+	var camera;
     function webGLStart() {
 		aSliderColor = getRandomRGBColors();
+		camera = {
+			"translate": [0, 0, -10],
+			"rotateAng": 0,
+			"rotate": [0, 0, 0],
+			"scale": [1, 1, 1],
+		}
 		
         var canvas = document.getElementById("practica1-canvas");
         initGL(canvas);
@@ -214,7 +221,10 @@
 			mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 100.0, pMatrix);
 		}
         mat4.identity(mvMatrix);
-        mat4.translate(mvMatrix, [-0.0, -0.0, -10.0]);
+		// Camera ajustments
+		mat4.rotate(mvMatrix, degToRad(camera.rotateAng), [camera.rotate[0], camera.rotate[1], camera.rotate[2]]);
+        mat4.scale(mvMatrix, [camera.scale[0], camera.scale[1], camera.scale[2]]);
+        mat4.translate(mvMatrix, [camera.translate[0], camera.translate[1], camera.translate[2]]);
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
 			mvPushMatrix();
@@ -423,6 +433,7 @@
 	}
 	
 	function initializeControls() {
+		updateCameraValues();
 		setInputValue("position-x-input", "0.0");
 		setInputValue("position-y-input", "0.0");
 		setInputValue("position-z-input", "0.0");
@@ -433,6 +444,19 @@
 		setInputValue("scale-x-input", "1.0");
 		setInputValue("scale-y-input", "1.0");
 		setInputValue("scale-z-input", "1.0");
+	}
+	
+	function updateCameraValues() {
+		setInputValue("position-x-input-camera", camera.translate[0]);
+		setInputValue("position-y-input-camera", camera.translate[1]);
+		setInputValue("position-z-input-camera", camera.translate[2]);
+		setInputValue("rotation-a-input-camera", camera.rotateAng);
+		setInputValue("rotation-x-input-camera", camera.rotate[0]);
+		setInputValue("rotation-y-input-camera", camera.rotate[1]);
+		setInputValue("rotation-z-input-camera", camera.rotate[2]);
+		setInputValue("scale-x-input-camera", camera.scale[0]);
+		setInputValue("scale-y-input-camera", camera.scale[1]);
+		setInputValue("scale-z-input-camera", camera.scale[2]);
 	}
 	
 	function setInputValue(inputId, newValue) {
@@ -460,7 +484,14 @@
 	}
 	
 	function modifyObjectTGFromInput(inputId, inputValue) {
-		var object = getSelectedObject();
+		var object;
+		if (inputId.indexOf("camera") != -1) {
+			object = camera;
+			inputVar = inputId.split("-input-camera")[0];
+		} else {
+			object = getSelectedObject();
+			inputVar = inputId.split("-input")[0];
+		}
 		
 		if (object != null) {
 			modifyObjectTG(object, inputId.split("-input")[0], inputValue, true);
@@ -545,6 +576,7 @@
 	function updateVisualElements() {
 		writeListElements();	
 		updateControlList();
+		updateCameraValues();
 		drawScene();	
 	}
 	
@@ -564,19 +596,61 @@
 <body onload="webGLStart();">	
 	<div class="row">
 		<div class="col col-4 col-border">
-			<p><b>Menu</b></p>
-			<p>Selected: <b id="text-object-selected">None</b> [<i id="unselect-item" class="clickable-text" onclick="unSelectObjectSelected();">Unselect</i>]</p>
 			<p id="camera-tg" class="clickable-text" onclick="toggleHideShow('div-camera', null, 'block')"><b>Camera</b></p>
-			<div id="div-camera" class="container-center-vertical">
-				<i style="margin-right: 5px;">Ortho</i>
-					<label class="switch" onchange="onSwitchChangedPosition()">
-					  <input id="switch-camera" type="checkbox">
-					  <span class="slider round"></span>
-					</label>
-				<i style="margin-left: 5px;">Axo</i>
+			<div id="div-camera">
+				<div class="container-center-vertical">
+					<i style="margin-right: 5px;">Ortho</i>
+						<label class="switch" onchange="onSwitchChangedPosition()">
+						  <input id="switch-camera" type="checkbox">
+						  <span class="slider round"></span>
+						</label>
+					<i style="margin-left: 5px;">Axo</i>
+				</div>
+				
+				<p>Position [x, y, z]</p>	
+				<div class="divnext">
+					<input id="position-x-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+				</div>
+				<div class="divnext">				
+					<input id="position-y-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+				</div>
+				<div class="divnext">
+					<input id="position-z-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">				
+				</div>
+				
+				<p>Rotation [a, x, y, z]</p>	
+				
+				<div class="divnext">
+					<input id="rotation-a-input-camera" type="number" class="inputTG" step="1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+				</div>
+				<div>
+					<div class="divnext">
+						<input id="rotation-x-input-camera" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+					</div>
+					<div class="divnext">
+						<input id="rotation-y-input-camera" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+					</div>
+					<div class="divnext">				
+						<input id="rotation-z-input-camera" type="number" class="inputTG" step="1" max="1" min="-1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+					</div>
+				</div>
+				
+				<p>Scale [x, y, z]</p>	
+				<div class="divnext">
+					<input id="scale-x-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+				</div>
+				<div class="divnext">				
+					<input id="scale-y-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
+				</div>
+				<div class="divnext">
+					<input id="scale-z-input-camera" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">				
+				</div>
 			</div>
+
 			<p id="control-tg" class="clickable-text" onclick="toggleHideShow('div-control', null, 'block')"><b>Controls</b></p>
 			<div id="div-control">
+				<p>Selected: <b id="text-object-selected">None</b> [<i id="unselect-item" class="clickable-text" onclick="unSelectObjectSelected();">Unselect</i>]</p>
+				
 				<p>Position [x, y, z]</p>	
 				<div class="divnext">
 					<input id="position-x-input" type="number" class="inputTG" step=".1" onchange="modifyObjectTGFromInput(this.id, this.value)">
@@ -643,10 +717,7 @@
 			
 			<p id="help-text" class="clickable-text" onclick="toggleHideShow('div-help', null, 'block')"><b>Help - FAQ</b></p>
 			<div id="div-help">
-				<i>How can I change the selected object?</i>
-				<p>Press keyboardArrows to change the selected object.</p>
-				<i>How can I add an object with custom values?</i>
-				<p>Unselect current object, change TG values and draw-and-drop object, or click add button.</p>
+				Help about controls is in the attached file. </br>
 			</div>
 		</div>	
 		

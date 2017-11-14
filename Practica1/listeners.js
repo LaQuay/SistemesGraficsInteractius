@@ -85,6 +85,7 @@ function setKeyboardListener() {
 		var key = evt.key;
 		console.log('Key click: ' + key);
 		
+		// Object controls
 		if (key == 'd') {
 			var object = getSelectedObject();
 			
@@ -108,6 +109,43 @@ function setKeyboardListener() {
 			
 			if (object != null) {
 				modifyObjectTG(object, "position-y", parseFloat(object.translate[1]) - 0.2, true);
+			}
+		}
+		
+		// Camera controls
+		if (key == 'l') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "position-x", parseFloat(camera.translate[0]) + 0.2, true);
+			}
+		} else if (key == 'j') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "position-x", parseFloat(camera.translate[0]) - 0.2, true);
+			}
+		} else if (key == 'i') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "position-y", parseFloat(camera.translate[1]) + 0.2, true);
+			}
+		} else if (key == 'k') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "position-y", parseFloat(camera.translate[1]) - 0.2, true);
+			}
+		} else if (key == 'PageUp') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) + 0.1, true);
+				modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) + 0.1, true);
+				modifyObjectTG(camera, "scale-z", parseFloat(camera.scale[2]) + 0.1, true);
+			}
+			if (camera != null) {
+				modifyObjectTG(camera, "position-z", parseFloat(camera.translate[2]) + 0.2, true);
+			}
+		} else if (key == 'PageDown') {			
+			if (camera != null) {
+				modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) - 0.1, true);
+				modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) - 0.1, true);
+				modifyObjectTG(camera, "scale-z", parseFloat(camera.scale[2]) - 0.1, true);				
+			}
+			if (camera != null) {
+				modifyObjectTG(camera, "position-z", parseFloat(camera.translate[2]) - 0.2, true);
 			}
 		}
 
