@@ -140,9 +140,15 @@ function setKeyboardListener() {
 			}
 		} else if (keyCode == 34) {//pagedown	
 			if (camera != null) {
-				modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) - 0.1, true);
-				modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) - 0.1, true);
-				modifyObjectTG(camera, "scale-z", parseFloat(camera.scale[2]) - 0.1, true);				
+				if (parseFloat(camera.scale[0]) > 0.1){
+					modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) - 0.1, true);
+					modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) - 0.1, true);
+					modifyObjectTG(camera, "scale-z", parseFloat(camera.scale[2]) - 0.1, true);				
+				} else {
+					modifyObjectTG(camera, "scale-x", 0.0, true);
+					modifyObjectTG(camera, "scale-y", 0.0, true);
+					modifyObjectTG(camera, "scale-z", 0.0, true);
+				}
 			}
 			if (camera != null) {
 				modifyObjectTG(camera, "position-z", parseFloat(camera.translate[2]) - 0.2, true);
