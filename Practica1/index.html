@@ -162,7 +162,8 @@
 	
 		pyramid.vertexColorBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexColorBuffer);	
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.vertexColorData), gl.STATIC_DRAW);
+		//gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pyramid.vertexColorData), gl.STATIC_DRAW);
+		setOffsetValuesToPosition("pyramid")
 			
 		sphere = getBaseSphere();
 	 
@@ -176,7 +177,8 @@
 		
 		sphere.vertexColorBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexColorBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sphere.vertexColorData), gl.STATIC_DRAW);
+		//gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sphere.vertexColorData), gl.STATIC_DRAW);
+		setOffsetValuesToPosition("sphere");
 		
 		cube = getBaseCube();		
 		
@@ -187,7 +189,7 @@
 		cube.vertexColorBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexColorBuffer);	
 		//gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.vertexColorData), gl.STATIC_DRAW);
-		setOffsetValuesToPosition();
+		setOffsetValuesToPosition("cube");
 		
 		cube.vertexIndexBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.vertexIndexBuffer);	
@@ -219,7 +221,7 @@
 				mat4.scale(mvMatrix, [modelObjects.pyramidsTG[i].scale[0], modelObjects.pyramidsTG[i].scale[1], modelObjects.pyramidsTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.pyramidsTG[i].translate[0], modelObjects.pyramidsTG[i].translate[1], modelObjects.pyramidsTG[i].translate[2]]);	
 				if (modelObjects.pyramidsTG[i].selected) {		
-					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [modelObjects.pyramidsTG[i].rotate[0], modelObjects.pyramidsTG[i].rotate[1], modelObjects.pyramidsTG[i].rotate[2]]);		
+					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [modelObjects.pyramidsTG[i].rotate[0], modelObjects.pyramidsTG[i].rotate[1], modelObjects.pyramidsTG[i].rotate[2]]);	
 				} 
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexPositionBuffer);
@@ -275,18 +277,31 @@
 		}
     }
 	
-	function setOffsetValuesToPosition() {	
-		console.log("SliderColors - RGB " + aSliderColor.R + " " + aSliderColor.G + " " + aSliderColor.B);
-		
-		var objectColorData = cube.vertexColorData;
-		for (i = 0; i < objectColorData.length - 2; i = i + 3) {
-			objectColorData[i] = aSliderColor.R;
-			objectColorData[i + 1] = aSliderColor.G;
-			objectColorData[i + 2] = aSliderColor.B;
+	function setOffsetValuesToPosition(initialization) {	
+		console.log("SliderColors - RGB " + aSliderColor.R + " " + aSliderColor.G + " " + aSliderColor.B + ", selected: " + getItemSelectedForColor());
+
+		var objectColorData = "";
+		if ((initialization != null && initialization == "cube") || getItemSelectedForColor() == "cube") {
+			gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexColorBuffer);	
+			objectColorData = cube.vertexColorData;
+		} else if ((initialization != null && initialization == "sphere") || getItemSelectedForColor() == "sphere") {
+			gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexColorBuffer);	
+			objectColorData = sphere.vertexColorData;
+		} else if ((initialization != null && initialization == "pyramid") || getItemSelectedForColor() == "pyramid") {
+			gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexColorBuffer);	
+			objectColorData = pyramid.vertexColorData;
 		}
 		
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(objectColorData), gl.STATIC_DRAW);
-		updateSliderAndColorPicker();
+		if (objectColorData != "") {		
+			for (i = 0; i < objectColorData.length - 2; i = i + 3) {
+				objectColorData[i] = aSliderColor.R;
+				objectColorData[i + 1] = aSliderColor.G;
+				objectColorData[i + 2] = aSliderColor.B;
+			}
+			
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(objectColorData), gl.STATIC_DRAW);
+			updateSliderAndColorPicker();
+		}
 	}
 	
 	function writeListElements() {
@@ -603,25 +618,30 @@
 			</div>
 			
 			<p><b id="control-colors" class="clickable-text" onclick="toggleHideShow('div-colors', null, 'block')">Colors</b> [<i class="clickable-text" onclick="randomizeColorButton();">Randomize!</i>]</p>
-			<div id="div-colors" class="row">
-				<div class="col col-1">
-					<div>
-						R: <input id="slider1" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" /> 
+			<div id="div-colors">
+				<code id="selector-cube" class="clickable-text" onclick="onItemSelectedForColor('cube')">Cube</code> - 
+				<code id="selector-sphere" class="clickable-text" onclick="onItemSelectedForColor('sphere')">Sphere</code> -
+				<code id="selector-pyramid" class="clickable-text" onclick="onItemSelectedForColor('pyramid')">Pyramid</code>
+				<div class="row">
+					<div class="col col-1">
+						<div>
+							R: <input id="slider1" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" /> 
+						</div>
+						<div>
+							G: <input id="slider2" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" />
+						</div>
+						<div>
+							B: <input id="slider3" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" />
+						</div>
 					</div>
-					<div>
-						G: <input id="slider2" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" />
+					
+					<div class="col col-1">
+						<input id="slider0" type="color" class="inputcolor" oninput="onColorPickerChange(event)";/>
 					</div>
-					<div>
-						B: <input id="slider3" type="range" min="0.0" max="1.0" step="0.01" value ="0.0" oninput="onSliderChange(event);" />
-					</div>
-				</div>
-				
-				<div class="col col-1">
-					<input id="slider0" type="color" class="inputcolor" oninput="onColorPickerChange(event)";/>
 				</div>
 			</div>
 			
-			<p id="help-text" class="clickable-text" onclick="toggleHideShow('div-help', null, 'block')"><b>Help</b></p>
+			<p id="help-text" class="clickable-text" onclick="toggleHideShow('div-help', null, 'block')"><b>Help - FAQ</b></p>
 			<div id="div-help">
 				<i>How can I change the selected object?</i>
 				<p>Press keyboardArrows to change the selected object.</p>

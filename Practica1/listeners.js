@@ -35,6 +35,8 @@ function onButtonAddObjectClick(ev) {
 	
 		// Marcamos la actual piramide como seleccionada
 		updateElementClicked("P", actualNumberOfPyramids);
+		
+		onItemSelectedForColor("pyramid");
 	} else if (ev == "buttonAddSphere") {
 		console.log("Adding Sphere");
 		isObjectAdded = true;
@@ -51,6 +53,7 @@ function onButtonAddObjectClick(ev) {
 		
 		// Marcamos la actual sphere como seleccionada		
 		updateElementClicked("S", actualNumberOfSpheres);
+		onItemSelectedForColor("sphere");
 	} else if (ev == "buttonAddCube") {
 		console.log("Adding Cube");
 		isObjectAdded = true;
@@ -67,6 +70,7 @@ function onButtonAddObjectClick(ev) {
 		
 		// Marcamos la actual cube como seleccionada		
 		updateElementClicked("C", actualNumberOfCubes);
+		onItemSelectedForColor("cube");
 	}
 	
 	if (objectAdded != null) {		
@@ -295,4 +299,43 @@ function randomizeColorButton() {
 	setOffsetValuesToPosition();
 	
 	drawScene();
+}
+
+function onItemSelectedForColor(id) {	
+	if (id == "cube") {
+		document.getElementById('selector-cube').innerHTML = "<b>Cube</b>"
+		aSliderColor.R = cube.vertexColorData[0];
+		aSliderColor.G = cube.vertexColorData[1];
+		aSliderColor.B = cube.vertexColorData[2];
+	} else {
+		document.getElementById('selector-cube').innerHTML = "Cube"
+	}
+	if (id == "sphere") {
+		document.getElementById('selector-sphere').innerHTML = "<b>Sphere</b>"	
+		aSliderColor.R = sphere.vertexColorData[0];
+		aSliderColor.G = sphere.vertexColorData[1];
+		aSliderColor.B = sphere.vertexColorData[2];	
+	} else {
+		document.getElementById('selector-sphere').innerHTML = "Sphere"
+	}
+	if (id == "pyramid") {
+		document.getElementById('selector-pyramid').innerHTML = "<b>Pyramid</b>"	
+		aSliderColor.R = pyramid.vertexColorData[0];
+		aSliderColor.G = pyramid.vertexColorData[1];
+		aSliderColor.B = pyramid.vertexColorData[2];	
+	} else {
+		document.getElementById('selector-pyramid').innerHTML = "Pyramid"
+	}
+	
+	updateSliderAndColorPicker();
+}
+
+function getItemSelectedForColor() {
+	if ((document.getElementById('selector-cube').innerHTML).indexOf("<b>") != -1) {
+		return "cube";
+	} else if ((document.getElementById('selector-sphere').innerHTML).indexOf("<b>") != -1) {
+		return "sphere";
+	} else if ((document.getElementById('selector-pyramid').innerHTML).indexOf("<b>") != -1) {
+		return "pyramid";
+	}
 }
