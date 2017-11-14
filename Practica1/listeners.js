@@ -82,29 +82,29 @@ function onButtonAddObjectClick(ev) {
 
 function setKeyboardListener() {
 	document.body.addEventListener('keydown', function(evt) {
-		var key = evt.key;
-		console.log('Key click: ' + key);
+		var keyCode = evt.keyCode;
+		console.log("Key: " + evt.key + ", code: " + keyCode)
 		
 		// Object controls
-		if (key == 'd') {
+		if (keyCode == 68) { //d
 			var object = getSelectedObject();
 			
 			if (object != null) {
 				modifyObjectTG(object, "position-x", parseFloat(object.translate[0]) + 0.2, true);
 			}
-		} else if (key == 'a') {
+		} else if (keyCode == 65) {//a
 			var object = getSelectedObject();
 			
 			if (object != null) {
 				modifyObjectTG(object, "position-x", parseFloat(object.translate[0]) - 0.2, true);
 			}
-		} else if (key == 'w') {
+		} else if (keyCode == 87) {//w
 			var object = getSelectedObject();
 			
 			if (object != null) {
 				modifyObjectTG(object, "position-y", parseFloat(object.translate[1]) + 0.2, true);
 			}
-		} else if (key == 's') {
+		} else if (keyCode == 83) {//s
 			var object = getSelectedObject();
 			
 			if (object != null) {
@@ -113,23 +113,23 @@ function setKeyboardListener() {
 		}
 		
 		// Camera controls
-		if (key == 'l') {			
-			if (camera != null) {
+		if (keyCode == 76) {			
+			if (camera != null) {//l
 				modifyObjectTG(camera, "position-x", parseFloat(camera.translate[0]) + 0.2, true);
 			}
-		} else if (key == 'j') {			
+		} else if (keyCode == 74) {//j		
 			if (camera != null) {
 				modifyObjectTG(camera, "position-x", parseFloat(camera.translate[0]) - 0.2, true);
 			}
-		} else if (key == 'i') {			
+		} else if (keyCode == 73) {//i			
 			if (camera != null) {
 				modifyObjectTG(camera, "position-y", parseFloat(camera.translate[1]) + 0.2, true);
 			}
-		} else if (key == 'k') {			
+		} else if (keyCode == 75) {//k	
 			if (camera != null) {
 				modifyObjectTG(camera, "position-y", parseFloat(camera.translate[1]) - 0.2, true);
 			}
-		} else if (key == 'PageUp') {			
+		} else if (keyCode == 33) {//pageup		
 			if (camera != null) {
 				modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) + 0.1, true);
 				modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) + 0.1, true);
@@ -138,7 +138,7 @@ function setKeyboardListener() {
 			if (camera != null) {
 				modifyObjectTG(camera, "position-z", parseFloat(camera.translate[2]) + 0.2, true);
 			}
-		} else if (key == 'PageDown') {			
+		} else if (keyCode == 34) {//pagedown	
 			if (camera != null) {
 				modifyObjectTG(camera, "scale-x", parseFloat(camera.scale[0]) - 0.1, true);
 				modifyObjectTG(camera, "scale-y", parseFloat(camera.scale[1]) - 0.1, true);
@@ -152,7 +152,7 @@ function setKeyboardListener() {
 		// Se trata de hacer una dependencia circular, el objeto no es un array así que automaticamente
 		// no es capaz de hacerlo. Asi que itera por los cubos, cuando termina itera por spheres y
 		// cuando termina itera por piramides
-		if (key == 'ArrowRight') {
+		if (keyCode == 39) {//arrowright
 		  var isCubeSelected = false;
 		  for (i = 0; i < modelObjects.cubesTG.length; ++i){
 			if (modelObjects.cubesTG[i].selected) {
@@ -220,7 +220,7 @@ function setKeyboardListener() {
 			  
 		  }
 		  updateVisualElements();
-		} else if (key == 'ArrowLeft') {
+		} else if (keyCode == 37) {//arrowleft
 		  var isCubeSelected = false;
 		  for (i = 0; i < modelObjects.cubesTG.length; ++i){
 			if (modelObjects.cubesTG[i].selected) {
