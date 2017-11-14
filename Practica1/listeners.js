@@ -288,3 +288,11 @@ function onColorPickerChange(e) {
 	
 	drawScene();
 }
+
+function randomizeColorButton() {
+	aSliderColor = getRandomRGBColors();
+	
+	setOffsetValuesToPosition();
+	
+	drawScene();
+}
