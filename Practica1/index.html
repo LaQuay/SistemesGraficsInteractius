@@ -9,6 +9,7 @@
 <script type="text/javascript" src="./libs/webgl-utils.js"></script>
 
 <script type="text/javascript" src="./models.js"></script>
+<script type="text/javascript" src="./sounds.js"></script>
 <script type="text/javascript" src="./listeners.js"></script>
 <script type="text/javascript" src="./auxiliar.js"></script>
 <script type="text/javascript" src="./matrix_auxiliar.js"></script>
@@ -108,6 +109,8 @@
         initBuffers();
 
 		initModels();
+		
+		initSounds();
 
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
@@ -645,6 +648,10 @@
 			toggleHideShow("unselect-item", false);
 		}
 	}
+	
+	function isSoundEnabled() {
+		return document.getElementById('checkbox-sounds').checked;
+	}
 </script>
 </head>
 
@@ -786,9 +793,12 @@
 				</div>
 			</div>
 			
-			<p id="help-text" class="clickable-text" onclick="toggleHideShow('div-help', null, 'block')"><b>Help - FAQ</b></p>
-			<div id="div-help">
-				Help about controls is in the attached file. </br>
+			<div class="container-center-vertical" style="margin-top: 15px;">
+				<label id="vertex" class="checkbox">
+				  <input id="checkbox-sounds" type="checkbox">
+				  <span class="checkmark"></span>
+				</label>		
+				<i style="margin-left: 10px;"> Enable sounds</i>
 			</div>
 		</div>	
 		
@@ -837,7 +847,7 @@
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 </body>
 
 </html>

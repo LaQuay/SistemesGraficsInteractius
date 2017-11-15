@@ -73,7 +73,8 @@ function onButtonAddObjectClick(ev) {
 		onItemSelectedForColor("cube");
 	}
 	
-	if (objectAdded != null) {		
+	if (objectAdded != null) {
+		playSound(soundsUrl[1], true);
 		drawScene();
 	}
 	
@@ -298,6 +299,7 @@ function setKeyboardListener() {
 }
 
 function onSwitchChangedPosition() {
+	playSound(soundsUrl[0], true);
 	drawScene();
 }
 
@@ -326,6 +328,8 @@ function onCheckboxChangedPosition(type) {
 			gl.uniform1f(shaderProgram.isVertexShaderColorActivatedUniform, 0.0);					
 		}		
 	}
+	playSound(soundsUrl[0], true);
+	
 	drawScene();		
 }
 
