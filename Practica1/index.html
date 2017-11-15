@@ -281,8 +281,8 @@
 		}
         mat4.identity(mvMatrix);
 		// Camera ajustments
-		mat4.rotate(mvMatrix, degToRad(camera.rotateAng), [camera.rotate[0], camera.rotate[1], camera.rotate[2]]);
         mat4.scale(mvMatrix, [camera.scale[0], camera.scale[1], camera.scale[2]]);
+		mat4.rotate(mvMatrix, degToRad(camera.rotateAng), [camera.rotate[0], camera.rotate[1], camera.rotate[2]]);
         mat4.translate(mvMatrix, [camera.translate[0], camera.translate[1], camera.translate[2]]);
 		
 		for (i = 0; i < modelObjects.pyramidsTG.length; ++i){
