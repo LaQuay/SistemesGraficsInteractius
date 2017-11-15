@@ -272,12 +272,12 @@
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		// If checked, camara es axonometrica, si no, ortogonal
+		// If checked, camara es perspectiva, si no, ortogonal
 		if (document.getElementById("switch-camera").checked) {
-			var ra = gl.canvas.width / gl.canvas.height;
-			mat4.ortho(-10*ra, 10*ra, -10, 10, 0.1, 100, pMatrix);
-		} else {
 			mat4.perspective(45, gl.canvas.width / gl.canvas.height, 0.1, 100.0, pMatrix);
+		} else {
+			var ra = gl.canvas.width / gl.canvas.height;
+			mat4.ortho(-3.72*ra, 3.72*ra, -3.72, 3.72, 0.1, 100, pMatrix); //3.72 para que la Ortho y Persp tengan un zoom inicial similar
 		}
         mat4.identity(mvMatrix);
 		// Camera ajustments
@@ -667,7 +667,7 @@
 					  <input id="switch-camera" type="checkbox">
 					  <span class="slider round"></span>
 					</label>
-					<i style="margin-left: 5px;">Axo</i>
+					<i style="margin-left: 5px;">Persp</i>
 				</div>
 				
 				<p>Position [x, y, z]</p>	
