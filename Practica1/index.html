@@ -289,9 +289,7 @@
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.pyramidsTG[i].scale[0], modelObjects.pyramidsTG[i].scale[1], modelObjects.pyramidsTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.pyramidsTG[i].translate[0], modelObjects.pyramidsTG[i].translate[1], modelObjects.pyramidsTG[i].translate[2]]);	
-				if (modelObjects.pyramidsTG[i].selected) {		
-					mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [modelObjects.pyramidsTG[i].rotate[0], modelObjects.pyramidsTG[i].rotate[1], modelObjects.pyramidsTG[i].rotate[2]]);	
-				} 
+				mat4.rotate(mvMatrix, degToRad(modelObjects.pyramidsTG[i].rotateAng), [modelObjects.pyramidsTG[i].rotate[0], modelObjects.pyramidsTG[i].rotate[1], modelObjects.pyramidsTG[i].rotate[2]]);	
 				
 				gl.bindBuffer(gl.ARRAY_BUFFER, pyramid.vertexPositionBuffer);
 				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, pyramid.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);
@@ -308,10 +306,7 @@
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.spheresTG[i].scale[0], modelObjects.spheresTG[i].scale[1], modelObjects.spheresTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.spheresTG[i].translate[0], modelObjects.spheresTG[i].translate[1], modelObjects.spheresTG[i].translate[2]]);	
-				
-				if (modelObjects.spheresTG[i].selected) {
-					mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [modelObjects.spheresTG[i].rotate[0], modelObjects.spheresTG[i].rotate[1], modelObjects.spheresTG[i].rotate[2]]);
-				}				
+				mat4.rotate(mvMatrix, degToRad(modelObjects.spheresTG[i].rotateAng), [modelObjects.spheresTG[i].rotate[0], modelObjects.spheresTG[i].rotate[1], modelObjects.spheresTG[i].rotate[2]]);				
 										
 				gl.bindBuffer(gl.ARRAY_BUFFER, sphere.vertexPositionBuffer);
 				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, sphere.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);     
@@ -329,10 +324,8 @@
 			mvPushMatrix();
 				mat4.scale(mvMatrix, [modelObjects.cubesTG[i].scale[0], modelObjects.cubesTG[i].scale[1], modelObjects.cubesTG[i].scale[2]]);
 				mat4.translate(mvMatrix, [modelObjects.cubesTG[i].translate[0], modelObjects.cubesTG[i].translate[1], modelObjects.cubesTG[i].translate[2]]);
-				if (modelObjects.cubesTG[i].selected) {
-					mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [modelObjects.cubesTG[i].rotate[0], modelObjects.cubesTG[i].rotate[1], modelObjects.cubesTG[i].rotate[2]]);	
-				}
-				
+				mat4.rotate(mvMatrix, degToRad(modelObjects.cubesTG[i].rotateAng), [modelObjects.cubesTG[i].rotate[0], modelObjects.cubesTG[i].rotate[1], modelObjects.cubesTG[i].rotate[2]]);	
+								
 				gl.bindBuffer(gl.ARRAY_BUFFER, cube.vertexPositionBuffer);
 				gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cube.vertexPositionDataItemSize, gl.FLOAT, false, 0, 0);
 				
