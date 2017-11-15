@@ -84,7 +84,7 @@
 		
 		//No existen booleanos en varying asi que si es entre 1 y 0.1 es true, si no, falso
 		if (uIsVertexShaderColorActivated > 0.1) {
-			vColor = vec4(aVertexColor.x, aVertexColor.y*gl_Position[1], aVertexColor.z, 1.0);
+			vColor = vec4(aVertexColor.x*(gl_Position[1]+1.0), aVertexColor.y*(gl_Position[1]+1.0), aVertexColor.z*(gl_Position[1]+1.0), 1.0);
 		} else {
 			vColor = vec4(aVertexColor.x, aVertexColor.y, aVertexColor.z, 1.0);
 		}
